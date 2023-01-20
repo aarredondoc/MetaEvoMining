@@ -4,7 +4,7 @@ getmoda <- function(v) {
   uniqv <- unique(v)
   uniqv[which.max(tabulate(match(v, uniqv)))]
 }
-getmoda(numerical_columns)
+
 #input a vector that contains a column
 #input2 genomas de interes
 #output verdadero o falso si los genomas se encuentran en la columna por arriba de la moda
@@ -36,4 +36,5 @@ class(numerical_columns)
 numco<-evominining_table[numerical_columns]
 #EF_names<-as.list(select_if(evominining_table, is.numeric))
 sapply(numco,getmoda)
-sapply(numco,above_mode_fun(x,Mydata_bins))
+sapply(numco,above_mode_fun,Mydata_bins)
+
