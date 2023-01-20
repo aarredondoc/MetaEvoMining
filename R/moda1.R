@@ -1,40 +1,39 @@
 library("readr")
-evominining_table <- read_tsv('Evominingtable.tsv')
-Totalgenomes<- evominining_table$Genomes
-Totalgenomes[]
-class(Totalgenomes)
-genomas <- c("Pseudophaeobacter_5mSIPHEX1_37", "Paracoccus_sp000967825_700mSIPHEX1_1")
-genomas
-Mydata_bins <- grep("*mSIPHEX*",Totalgenomes)
-Totalgenomes[Mydata_bins]
-#localizar indices de los genomas
-indexes<-which(Totalgenomes%in%Mydata_bins)
-indexes
-
-numerical_columns <- sapply(evominining_table, is.numeric)
 #encontrar la moda de una columna
 getmoda <- function(v) {
   uniqv <- unique(v)
   uniqv[which.max(tabulate(match(v, uniqv)))]
 }
-#encontrar todas las modas
-allmodes<-sapply(evominining_table[, numerical_columns], getmoda)
-
-allmodes
-#encontrar una columna
-EF <- evominining_table$`ALPHAKETOGLUTARATE_AMINOACIDS_3--Glutamine_synthetase_1`
-EF
-EFmode <- getmoda(EF)
-EFmode
-#Index mayor a la moda de cierta columna
-above_mode_indexes <- which(evominining_table$`ALPHAKETOGLUTARATE_AMINOACIDS_3--Glutamine_synthetase_1`> EFmode)
-above_mode_indexes
-#Buscamos index de genomas en la lista de indexes mayor a la moda
-binsabovemode<-Mydata_bins[which(Mydata_bins%in%above_mode_indexes)]
-Totalgenomes[binsabovemode]
-#Encontrar nombres de lasEF
-EF_names <- colnames(evominining_table)
-
-above_mode_indexes <- function(f){
+getmoda(numerical_columns)
+#input a vector that contains a column
+#input2 genomas de interes
+#output verdadero o falso si los genomas se encuentran en la columna por arriba de la moda
+above_mode_fun <- function(f,g_names){#f is a vector and df is a dataframe
+  EFmode <- getmoda(f)
+  abovemodeindexes <- which(f > EFmode)
+  binsabovemode<-g_names[which(g_names%in%abovemodeindexes)]
+  #binsabovemode<-g_names%in%abovemodeindexes
+  return(binsabovemode)
 
 }
+#variables
+evominining_table <- read_tsv('Evominingtable.tsv')
+EF <- evominining_table$`ALPHAKETOGLUTARATE_AMINOACIDS_3--Glutamine_synthetase_1`
+Totalgenomes<- evominining_table$Genomes
+Mydata_bins <- grep("*mSIPHEX*",Totalgenomes)
+#main program
+above_mode_fun(EF,Mydata_bins)
+any(above_mode_fun(EF,Mydata_bins))
+#ejemplo
+evominining_table$Genomes[336]#"Tateyamaria_sp900143535_5mSIPHEX1_8"
+evominining_table$`ALPHAKETOGLUTARATE_AMINOACIDS_3--Glutamine_synthetase_1`[336]#6
+getmoda(EF)#4
+
+#select all columns
+library("dplyr")
+numerical_columns <- sapply(evominining_table, is.numeric)
+class(numerical_columns)
+numco<-evominining_table[numerical_columns]
+#EF_names<-as.list(select_if(evominining_table, is.numeric))
+sapply(numco,getmoda)
+sapply(numco,above_mode_fun(x,Mydata_bins))
