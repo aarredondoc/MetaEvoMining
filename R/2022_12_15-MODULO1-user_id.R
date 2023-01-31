@@ -9,9 +9,11 @@
 #' user_id()
 #' @export
 #library("readr")
-#cargamos archivo
+#Variables------------------------------------------------------------------####
 gtdbK_file <- read_tsv('data/gtdbtk.bac120.summary.tsv')
 genome_example<-"700mSIPHEX2-concot_9"
+#aplicar para una lista de ids
+userg_list<-gtdbK_file$user_genome#lista
 #--------------------------------------------------------------------------------
 #Funcion da un dataframe con id_numero",	"feature_id","user_genome", "gtdbk" y "database
 #id_numero     feature_id   user_genome                                gtdbk  database
@@ -77,12 +79,10 @@ user_id <- function(table,id){
   df[1,] <-c( value_id, feature_id, bin_id,	sp_rast, family, orden)
   return (df)
 }
-
+##Main program--------------------------------------------------------------####
 user_id(gtdbK_file,genome_example)
-#-----------------------------------------------------------------------------------
-#aplicar para una lista de ids
-#lista:
-userg_list<-gtdbK_file$user_genome
+#Aplicamos la funcion a una lista-----------------------------------------------
+
 
 library(plyr)
 taxon_assig<- ldply(.data =userg_list,
@@ -94,7 +94,7 @@ newdata <- taxon_assig[order(taxon_assig$database),]
 newdata
 #rast_ids<-select(taxon_assig, "id_numero", "feature_id", "gtdbk")
 #rast_ids
-#------------------------------------------------------------------------------------
+#Para buscar a que familia pertenece cada MAG-----------------------------------
 famis<-function(file){
   x<-file$classification
   w<-strsplit(x, ";")
@@ -107,10 +107,8 @@ famis<-function(file){
 }
 famis(gtdbK_file)
 
-#----------------------------------------------------------------------------------
-#simular un archivo de rast ids sin nombres de columnas
+#crear un archivo de rast ids sin nombres de columnas---------------------------
 #100000	666666.100000	700mSIPHEX1_15	Oleibacter_sp002733645_700mSIPHEX1_15
 write.table(taxon_assig , file =  "data/database_table.IDs", sep = "\t", dec = ".",
             row.names = FALSE, col.names = FALSE, quote=FALSE)
 
-#------------------------------------------------------------------------------------
