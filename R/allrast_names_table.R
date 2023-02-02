@@ -1,24 +1,17 @@
-#' @title Subsets the mapped KO table based on pathways.
-#' @description reads the output of the mapping_ko function to filter out KOs
-#' based on pathways.
-#' @usage user_id()
-#' @details This function is part of a package used for the analysis of
-#' bins metabolism.
-#' @import dplyr rlang readr plyr
-#' @examples
-#' user_id()
-#' @export
-#library("readr")
-#Variables------------------------------------------------------------------####
-gtdbK_file <- read_tsv('data/gtdbtk.bac120.summary.tsv')
-genome_example<-"700mSIPHEX2-concot_9"
-#aplicar para una lista de ids
-userg_list<-gtdbK_file$user_genome#lista
+#Esta funcion lee el archivo de gtdbtk y nos devuelve un archivo que contiene cuatro
+#columnas del rast id mas el nombre del genoma del usuario V3 para incorporarla al
+#archivo txt
+#    V1           V2             V3                                   v4
+#220000 666666.220000 700mSIPHEX2_9 Paracoccus sp000967825 700mSIPHEX2 9
+library("readr")
+#cargamos archivo
+gtdbK_file <- read_tsv('Datos/gtdbtk.bac120.summary.tsv')
+#genome_example<-"700mSIPHEX2-concot_9"
 #--------------------------------------------------------------------------------
-#Funcion da un dataframe con id_numero",	"feature_id","user_genome", "gtdbk" y "database
-#id_numero     feature_id   user_genome                                gtdbk  database
-#1   2200000 666666.2200000 700mSIPHEX2_9 Paracoccus_sp000967825_700mSIPHEX2_9 family
-user_id <- function(table,id){
+#Funcion da un dataframe con id_numero",	"feature_id","user_genome" y "gtdbk"
+#id_numero     feature_id   user_genome                                gtdbk
+#1   2200000 666666.2200000 700mSIPHEX2_9 Paracoccus_sp000967825_700mSIPHEX2_9
+user_id <- function(table,id){ 
   #busco la fila del id en gtdbk_file en la columna user_genome
   #Ejemplo: A tibble: 1 × 21
   #user_genome    class…¹ fasta…² fasta…³ fasta…⁴ fasta…⁵ fasta…⁶ close…⁷ close…⁸ close…⁹ close…˟ pplac…˟ class…˟ note  other…˟ aa_pe…˟
@@ -27,7 +20,7 @@ user_id <- function(table,id){
   x<-table[table$user_genome == id,]
   #Encontrar en la fila la asignacion de gtdbk en clasification y separar por ";". Ejemplo:
   #[[1]]
-  #[1] "d__Bacteria"                  "p__Proteobacteria"            "c__Alphaproteobacteria"       "o__Rhodobacterales"
+  #[1] "d__Bacteria"                  "p__Proteobacteria"            "c__Alphaproteobacteria"       "o__Rhodobacterales"          
   #[5] "f__Rhodobacteraceae"          "g__Sulfitobacter"             "s__Sulfitobacter sp001634775"
   w<-strsplit(x$classification, ";")
   #En un if anidado, encontrar la especie correspondiente si está asignada, si no asignar genero, familia. Ejemplo:
@@ -54,7 +47,7 @@ user_id <- function(table,id){
   bin_id<-paste(id_split[[1]][1],"_",id_split[[1]][3],sep = "")
   #Agregar bin_id al nombre de especie para diferenciar entre genomas. Ejemplo:
   #[1] "Sulfitobacter_sp001634775_5mSIPHEX2_25"
-  sp_rast<-paste(g_sp,bin_id,sep = "_")
+  sp_rast<-paste(g_sp,bin_id,sep = "")
   #Asignamos un numero de id basado en el index
   xvalue<-which(table == id, arr.ind = TRUE)
   x_row<-xvalue[1]
@@ -69,46 +62,49 @@ user_id <- function(table,id){
   value_id<-format(row_size, scientific = FALSE)
   #value_id<-format(as.numeric(x_row)*100000, scientific = FALSE)
   feature_id<-paste("666666.",value_id,sep = "")
-  #sacar la familia y clasificarla en la db
-  family<-lapply(w,`[[`, 5)
-  orden<-lapply(w,`[[`, 4)
   #Hacer dataframe vacio y llenarlo.
-  df <- data.frame(matrix(ncol = 6, nrow = 0))
-  colnames(df) <-c("id_numero",	"feature_id","user_genome","gtdbk_specie", "database", "orden")
+  df <- data.frame(matrix(ncol = 4, nrow = 0))
+  colnames(df) <-c("id_numero",	"feature_id","user_genome","gtdbk")
   #rellenar las filas de el df
-  df[1,] <-c( value_id, feature_id, bin_id,	sp_rast, family, orden)
+  df[1,] <-c( value_id, feature_id, bin_id,	sp_rast)
   return (df)
 }
-##Main program--------------------------------------------------------------####
-user_id(gtdbK_file,genome_example)
-#Aplicamos la funcion a una lista-----------------------------------------------
 
+#user_id(gtdbK_file,genome_example)
+#-----------------------------------------------------------------------------------
+#aplicar para una lista de ids
+#lista:
+userg_list<-gtdbK_file$user_genome
 
 library(plyr)
 taxon_assig<- ldply(.data =userg_list,
                     .fun= function(x) user_id(gtdbK_file,x))
 
 taxon_assig
-
-newdata <- taxon_assig[order(taxon_assig$database),]
-newdata
 #rast_ids<-select(taxon_assig, "id_numero", "feature_id", "gtdbk")
 #rast_ids
-#Para buscar a que familia pertenece cada MAG-----------------------------------
-famis<-function(file){
-  x<-file$classification
-  w<-strsplit(x, ";")
-  fam<-lapply(w,`[[`, 5)
-  specie<-lapply(w,`[[`, 7)
-  e<-lapply(w,`[[`, 3)
-  ug<-file$user_genome
-  ret<-paste(fam, specie,ug)
-  return(sort(ret))
-}
-famis(gtdbK_file)
-
-#crear un archivo de rast ids sin nombres de columnas---------------------------
+#----------------------------------------------------------------------------------
+#simular un archivo de rast ids sin nombres de columnas
 #100000	666666.100000	700mSIPHEX1_15	Oleibacter_sp002733645_700mSIPHEX1_15
-write.table(taxon_assig , file =  "data/database_table.IDs", sep = "\t", dec = ".",
+write.table(taxon_assig , file =  "Datos/rast_namestable.IDs", sep = "\t", dec = ".",
             row.names = FALSE, col.names = FALSE, quote=FALSE)
 
+#------------------------------------------------------------------------------------
+#mezclar los archivo rast.IDs
+#library(dplyr)
+#data_all <- list.files(path = "/Datos",  # Identify all CSV files
+#                      pattern = "*.IDs", full.names = TRUE) %>% 
+#  lapply(read_csv) %>%                              # Store all files in list
+#  bind_rows                                       # Combine data sets into one data set 
+#data_all    
+#one<-read.table("Datos/Corason_Rast.IDs",colClasses = "character")
+#two<-read.table("Datos/Alphaproteobacteria_rastid.IDs",colClasses = "character")
+
+#one
+#dput(two$V2)
+#dput(one$V2)
+
+#v<-bind_rows(one,two)
+#v
+#write.table(v , file =  "Datos/Alphaproteobacteria_merged.IDs", sep = "\t", dec = ".",
+#            row.names = FALSE, col.names = FALSE, quote=FALSE)

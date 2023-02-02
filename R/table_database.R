@@ -1,24 +1,12 @@
-#' @title Subsets the mapped KO table based on pathways.
-#' @description reads the output of the mapping_ko function to filter out KOs
-#' based on pathways.
-#' @usage user_id()
-#' @details This function is part of a package used for the analysis of
-#' bins metabolism.
-#' @import dplyr rlang readr plyr
-#' @examples
-#' user_id()
-#' @export
-#library("readr")
-#Variables------------------------------------------------------------------####
-gtdbK_file <- read_tsv('data/gtdbtk.bac120.summary.tsv')
+library("readr")
+#cargamos archivo
+gtdbK_file <- read_tsv('Datos/gtdbtk.bac120.summary.tsv')
 genome_example<-"700mSIPHEX2-concot_9"
-#aplicar para una lista de ids
-userg_list<-gtdbK_file$user_genome#lista
 #--------------------------------------------------------------------------------
 #Funcion da un dataframe con id_numero",	"feature_id","user_genome", "gtdbk" y "database
 #id_numero     feature_id   user_genome                                gtdbk  database
 #1   2200000 666666.2200000 700mSIPHEX2_9 Paracoccus_sp000967825_700mSIPHEX2_9 family
-user_id <- function(table,id){
+user_id <- function(table,id){ 
   #busco la fila del id en gtdbk_file en la columna user_genome
   #Ejemplo: A tibble: 1 × 21
   #user_genome    class…¹ fasta…² fasta…³ fasta…⁴ fasta…⁵ fasta…⁶ close…⁷ close…⁸ close…⁹ close…˟ pplac…˟ class…˟ note  other…˟ aa_pe…˟
@@ -27,7 +15,7 @@ user_id <- function(table,id){
   x<-table[table$user_genome == id,]
   #Encontrar en la fila la asignacion de gtdbk en clasification y separar por ";". Ejemplo:
   #[[1]]
-  #[1] "d__Bacteria"                  "p__Proteobacteria"            "c__Alphaproteobacteria"       "o__Rhodobacterales"
+  #[1] "d__Bacteria"                  "p__Proteobacteria"            "c__Alphaproteobacteria"       "o__Rhodobacterales"          
   #[5] "f__Rhodobacteraceae"          "g__Sulfitobacter"             "s__Sulfitobacter sp001634775"
   w<-strsplit(x$classification, ";")
   #En un if anidado, encontrar la especie correspondiente si está asignada, si no asignar genero, familia. Ejemplo:
@@ -79,10 +67,12 @@ user_id <- function(table,id){
   df[1,] <-c( value_id, feature_id, bin_id,	sp_rast, family, orden)
   return (df)
 }
-##Main program--------------------------------------------------------------####
-user_id(gtdbK_file,genome_example)
-#Aplicamos la funcion a una lista-----------------------------------------------
 
+user_id(gtdbK_file,genome_example)
+#-----------------------------------------------------------------------------------
+#aplicar para una lista de ids
+#lista:
+userg_list<-gtdbK_file$user_genome
 
 library(plyr)
 taxon_assig<- ldply(.data =userg_list,
@@ -94,7 +84,7 @@ newdata <- taxon_assig[order(taxon_assig$database),]
 newdata
 #rast_ids<-select(taxon_assig, "id_numero", "feature_id", "gtdbk")
 #rast_ids
-#Para buscar a que familia pertenece cada MAG-----------------------------------
+#------------------------------------------------------------------------------------
 famis<-function(file){
   x<-file$classification
   w<-strsplit(x, ";")
@@ -107,8 +97,10 @@ famis<-function(file){
 }
 famis(gtdbK_file)
 
-#crear un archivo de rast ids sin nombres de columnas---------------------------
+#----------------------------------------------------------------------------------
+#simular un archivo de rast ids sin nombres de columnas
 #100000	666666.100000	700mSIPHEX1_15	Oleibacter_sp002733645_700mSIPHEX1_15
-write.table(taxon_assig , file =  "data/database_table.IDs", sep = "\t", dec = ".",
+write.table(taxon_assig , file =  "Datos/database_table.IDs", sep = "\t", dec = ".",
             row.names = FALSE, col.names = FALSE, quote=FALSE)
 
+#------------------------------------------------------------------------------------
