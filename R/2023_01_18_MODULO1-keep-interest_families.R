@@ -40,7 +40,7 @@ above_number_mode_fun <- function(f,g_names){#f is a vector and df is a datafram
 }
 
 #variables------------------------------------------------------------------####
-evominining_table <- read_tsv('Rhobacterales_evomining_table.tsv')#dataframe
+evominining_table <- read_tsv('Flavobacteraceae_evomining_table.tsv')#dataframe
 EF <- evominining_table$`ALPHAKETOGLUTARATE_AMINOACIDS_3--Glutamine_synthetase_1`#example family column 1
 EF2<-evominining_table$`Glycolysis_6--glyceraldehyde3phosphate_dehydrogenase_4`#example family column 2
 EF3<-evominining_table$'Glycolysis_1--Glucose_kinase_7' #example family column 3
@@ -77,7 +77,7 @@ keepcolumns<-numco[keepindex] #familias a las que si hacer el arbol de evomining
 nameskeepcol<-colnames(keepcolumns)
 
 #create a file with the EF that we want to keep-----------------------------####
-write.table(nameskeepcol, "runtreeevo_Rhobacterales.txt", sep = "\t", row.names = FALSE, col.names = FALSE,quote = FALSE)
+write.table(nameskeepcol, "runtreeevo_Flavobacteraceae.txt", sep = "\t", row.names = FALSE, col.names = FALSE,quote = FALSE)
 
 #funtion above_number_mode_fun applied to all columns of a dataframe---------####
 
