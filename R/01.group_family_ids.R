@@ -1,10 +1,20 @@
+#' @title Subsets the mapped KO table based on pathways.
+#' @description reads the output of the mapping_ko function to filter out KOs
+#' based on pathways.
+#' @usage user_id()
+#' @details This function is part of a package used for the analysis of
+#' bins metabolism.
+#' @import dplyr rlang readr plyr
+#' @examples
+#' filter_userID("data/gtdbtk.bac120.summary.tsv",data_names="700mSIPHEX2_9")
+#' @export
 library("readr")
 #cargamos archive
 gtdbK_file <- read_tsv('Datos/gtdbtk.bac120.summary.tsv')
 #aplicar para una lista de ids
 #lista:
 userg_list<-gtdbK_file$user_genome
-user_id <- function(table,id,fv){ 
+user_id <- function(table,id,fv){
   #busco la fila del id en gtdbk_file en la columna user_genome
   #Ejemplo: A tibble: 1 × 21
   #user_genome    class…¹ fasta…² fasta…³ fasta…⁴ fasta…⁵ fasta…⁶ close…⁷ close…⁸ close…⁹ close…˟ pplac…˟ class…˟ note  other…˟ aa_pe…˟
@@ -13,7 +23,7 @@ user_id <- function(table,id,fv){
   x<-table[table$user_genome == id,]
   #Encontrar en la fila la asignacion de gtdbk en clasification y separar por ";". Ejemplo:
   #[[1]]
-  #[1] "d__Bacteria"                  "p__Proteobacteria"            "c__Alphaproteobacteria"       "o__Rhodobacterales"          
+  #[1] "d__Bacteria"                  "p__Proteobacteria"            "c__Alphaproteobacteria"       "o__Rhodobacterales"
   #[5] "f__Rhodobacteraceae"          "g__Sulfitobacter"             "s__Sulfitobacter sp001634775"
   w<-strsplit(x$classification, ";")
   #En un if anidado, encontrar la especie correspondiente si está asignada, si no asignar genero, familia. Ejemplo:
@@ -78,11 +88,11 @@ user_id <- function(table,id,fv){
   #}else if(c=="f__Oleiphilaceae") {
   #  df3[1,] <-c( value_id, feature_id, bin_id,	sp_rast)
   #}
-  
+
   family_id<-select(df1, "id_numero", "feature_id", "gtdbk")
   #Bacteroidia<-select(df2, "id_numero", "feature_id", "gtdbk")
   #Gammaproteobacteria<-select(df3, "id_numero", "feature_id", "gtdbk")
-  
+
 return(family_id)
 }
 

@@ -6,14 +6,16 @@
 #' bins metabolism.
 #' @import dplyr rlang readr plyr
 #' @examples
-#' user_id()
+#' filter_userID("data/gtdbtk.bac120.summary.tsv",data_names="700mSIPHEX2_9")
 #' @export
 #library("readr")
+filter_userID<-function(data_gtdbtk, data_names=NULL){
 #Variables------------------------------------------------------------------####
-gtdbK_file <- read_tsv('data/gtdbtk.bac120.summary.tsv')
-genome_example<-"700mSIPHEX2-concot_9"
+gtdbK_file <- read_tsv(data_gtdbtk)
+genome_example<-data_names
 #aplicar para una lista de ids
-userg_list<-gtdbK_file$user_genome#lista
+userg_list<- gtdbK_file$user_genome
+
 #--------------------------------------------------------------------------------
 #Funcion da un dataframe con id_numero",	"feature_id","user_genome", "gtdbk" y "database
 #id_numero     feature_id   user_genome                                gtdbk  database
@@ -35,7 +37,7 @@ user_id <- function(table,id){
   #[1] "s__Sulfitobacter sp001634775"
   specie<-lapply(w,`[[`, 7)
   f<-specie
-  if(specie=="s__") {
+  if(specie=="s__"){
     f<-lapply(w,`[[`, 6)
     if(f=="g__"){
       f<-lapply(w,`[[`, 5)
@@ -109,6 +111,8 @@ famis(gtdbK_file)
 
 #crear un archivo de rast ids sin nombres de columnas---------------------------
 #100000	666666.100000	700mSIPHEX1_15	Oleibacter_sp002733645_700mSIPHEX1_15
-write.table(taxon_assig , file =  "data/database_table.IDs", sep = "\t", dec = ".",
+write.table(taxon_assig , file =  "database_table.IDs", sep = "\t", dec = ".",
             row.names = FALSE, col.names = FALSE, quote=FALSE)
 
+}
+filter_userID("data/gtdbtk.bac120.summary.tsv",data_names = "700mSIPHEX1-concot_15")
