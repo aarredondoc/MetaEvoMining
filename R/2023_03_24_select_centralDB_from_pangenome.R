@@ -6,10 +6,11 @@ Pangenome_matrix <- read_csv("pangenome_matrix_t0.csv")
 #filtrar
 rownames(Pangenome_matrix)<-Pangenome_matrix$Gene
 num_matrix <- Pangenome_matrix[,15:26]
-row1<-num_matrix[1,15:26, value =TRUE]
+row1<-num_matrix[1,]
 
 
-V <- as.logical()
+V <- as.logical(row1)
 sum(V)>length(V)/2
 #para todos los renglones
-filter(Pangenome_matrix,sum(V)>length(V)/2 )
+EF <- filter(num_matrix,sum(V)>length(V)/2 )
+head(EF)
