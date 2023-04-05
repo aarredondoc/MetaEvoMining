@@ -1,9 +1,13 @@
-#' @title
-#' @description
-#' @usage
-#' @details
-#' @import
-#' @examples
+#' @title Make created names for evomining
+#' @description This function reads the gtdb-tk taxonomic mapping summary file and
+#' returns a four-column file containing a 6-digit numeric name, a unique
+#' identifier, the user-assigned genome name, and the taxonomic mapping.
+#' @usage make_allnames_table(gtdbK_report)
+#' @param gtdbK_report is a tsv file wich was create by
+#' [gtdbtk](https://github.com/Ecogenomics/GTDBTk.git) program.
+#' @details This function is part of the MetaEvoMining package
+#' @import readr dplyr
+#' @examples make_allnames_table('data/gtdbtk.bac120.summary.tsv')
 #' @export
 
 make_allnames_table<-function(gtdbK_report){
@@ -12,11 +16,11 @@ make_allnames_table<-function(gtdbK_report){
 #archivo txt
 #    V1           V2             V3                                   v4
 #220000 666666.220000 700mSIPHEX2_9 Paracoccus sp000967825 700mSIPHEX2 9
-library("readr")
+#library("readr")
 #cargamos archivo
 gtdbK_file <- read_tsv(gtdbK_report)
 #genome_example<-"700mSIPHEX2-concot_9"
-#--------------------------------------------------------------------------------
+#---------------------------------------------------------------------------####
 #Funcion da un dataframe con id_numero",	"feature_id","user_genome" y "gtdbk"
 #id_numero     feature_id   user_genome                                gtdbk
 #1   2200000 666666.2200000 700mSIPHEX2_9 Paracoccus_sp000967825_700mSIPHEX2_9
@@ -80,25 +84,25 @@ user_id <- function(table,id){
 }
 
 #user_id(gtdbK_file,genome_example)
-#-----------------------------------------------------------------------------------
+#---------------------------------------------------------------------------####
 #aplicar para una lista de ids
 #lista:
 userg_list<-gtdbK_file$user_genome
 
-library(plyr)
-taxon_assig<- ldply(.data =userg_list,
+#library(plyr)
+taxon_assig<- plyr::ldply(.data =userg_list,
                     .fun= function(x) user_id(gtdbK_file,x))
 
 taxon_assig
 #rast_ids<-select(taxon_assig, "id_numero", "feature_id", "gtdbk")
 #rast_ids
-#----------------------------------------------------------------------------------
+#---------------------------------------------------------------------------####
 #simular un archivo de rast ids sin nombres de columnas
 #100000	666666.100000	700mSIPHEX1_15	Oleibacter_sp002733645_700mSIPHEX1_15
 write.table(taxon_assig , file =  "data/rast_namestable.IDs", sep = "\t", dec = ".",
             row.names = FALSE, col.names = FALSE, quote=FALSE)
 
-#------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------####
 #mezclar los archivo rast.IDs
 #library(dplyr)
 #data_all <- list.files(path = "/Datos",  # Identify all CSV files
@@ -119,4 +123,4 @@ write.table(taxon_assig , file =  "data/rast_namestable.IDs", sep = "\t", dec = 
 #            row.names = FALSE, col.names = FALSE, quote=FALSE)
 }
 
-make_allnames_table('data/gtdbtk.bac120.summary.tsv')
+

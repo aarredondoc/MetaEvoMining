@@ -7,7 +7,7 @@
 #' [gtdbtk](https://github.com/Ecogenomics/GTDBTk.git) program.
 #' @param taxa is the taxonomic rank
 #' @details This function is part of the MetaEvoMining package
-#' @import readr dplyr plyr
+#' @import readr dplyr
 #' @examples make_rastIDs_by_taxa('data/gtdbtk.bac120.summary.tsv',
 #' "f__Saccharospirillaceae")
 #' @export
@@ -103,7 +103,7 @@ user_id <- function(table,id,fv){
 #library(dplyr)
 #library(plyr)
 #library(tidyverse)
-taxon_ids<-ldply(.data =userg_list,
+taxon_ids<-plyr::ldply(.data =userg_list,
                  .fun= function(x) user_id(gtdbK_file,x,taxa))
 
 file_name_var <- taxa
