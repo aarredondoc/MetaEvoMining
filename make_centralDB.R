@@ -78,7 +78,7 @@ search_shell_enzymes_DB<-function(csv_matrix,path){
       header<-first_seq[[1]][1]
       fragments <- stri_split(as.character(header), fixed = "|",simplify = TRUE)
       specie<-gsub("\\[|\\]","",fragments[2])
-      header<-paste(stri_split(fragments[1],fixed = ":",simplify = TRUE)[1],"1",fragments[5],paste0(gsub(" ","",specie),stri_split(fragments[1],fixed = ":",simplify = TRUE)[2]),sep="|")
+      header<-paste(stri_split(fragments[1],fixed = ":",simplify = TRUE)[1],"1",gsub(" ","_",fragments[5]),paste0(gsub(" ","",specie),gsub(" ","",stri_split(fragments[1],fixed = ":",simplify = TRUE)[2])),sep="|")
       format<-c(header,sequence)
       return(format)
 
@@ -93,7 +93,7 @@ search_shell_enzymes_DB<-function(csv_matrix,path){
 
   lapply(shell_genes, function(file) {
     enzyme<-filter_files(file,shell_genes,path)
-    cat(paste(enzyme, collapse = "\n"), "\n", file = new_fasta_file, append = TRUE)
+    cat(paste(enzyme[1], "\n", gsub(" ","",gsub("(.{80})", "\\1\n", enzyme[2], perl=TRUE)), collapse = "",sep = ""),"\n", file = new_fasta_file, append = TRUE,sep = "")
   })
 
   close(new_fasta_file)
