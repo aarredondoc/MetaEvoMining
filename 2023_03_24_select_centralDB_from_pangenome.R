@@ -95,26 +95,41 @@ filter_files<-function(file,lista,path) {
     header<-first_seq[[1]][1]
     fragments <- stri_split(as.character(header), fixed = "|",simplify = TRUE)
     specie<-gsub("\\[|\\]","",fragments[2])
-    header<-paste(stri_split(fragments[1],fixed = ":",simplify = TRUE)[1],"1",fragments[5],paste0(gsub(" ","",specie),stri_split(fragments[1],fixed = ":",simplify = TRUE)[2]),sep="|")
+    header<-paste(stri_split(fragments[1],fixed = ":",simplify = TRUE)[1],"1",gsub(" ","_",fragments[5]),paste0(gsub(" ","",specie),gsub(" ","",stri_split(fragments[1],fixed = ":",simplify = TRUE)[2])),sep="|")
     format<-c(header,sequence)
     return(format)
 
 
   }
 }
-new_fasta_file <- file("new2.fasta", "w")
+shell_genes<- matrix_subset$gene
+example_gene<- "1415_accA_2.faa"
+listgenes<- c("1415_accA_2.faa","52012_nudJ.faa")
+path<-"Alcanivoracaceae/alg_intersection/"
+enzyme<-filter_files(example_gene,shell_genes,path)
+new_fasta_file <- file("new3.fasta", "w")
 #enzyme<-filter_files(example_gene,shell_genes,path)
  # writeLines(enzyme,new_fasta_file, sep = "\n")
   #writeLines(sequence,new_fasta_file)
   #close(new_fasta_file)
 
+
   lapply(shell_genes, function(file) {
     enzyme<-filter_files(file,shell_genes,path)
-    cat(paste(enzyme, collapse = "\n"), "\n", file = new_fasta_file, append = TRUE)
+    cat(paste(enzyme[1], "\n", gsub(" ","",gsub("(.{80})", "\\1\n", enzyme[2], perl=TRUE)), collapse = "",sep = ""),"\n", file = new_fasta_file, append = TRUE,sep = "")
+    #cat(paste(enzyme, collapse = "\n"), "\n", file = new_fasta_file, append = TRUE)
   })
+  #fasta_file <- paste(fasta_lines, collapse = "\n")
+  #writeLines(fasta_file, "ple.fasta")
 
   close(new_fasta_file)
 
+#  if (!requireNamespace("Biostrings", quietly = TRUE)) {
+#    install.packages("Biostrings")
+#  }
+#  library(Biostrings)
+#  uniline_fasta <- readDNAStringSet("Alcanivoracaceae_CentralDB", format = "fasta")
+#  writeXStringSet(uniline_fasta, "new_multi_file.fasta", format = "fasta")
 
 #filter_files(example_gene,shell_genes,path)
 #file.create("output.txt")
