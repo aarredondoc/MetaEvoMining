@@ -3,10 +3,11 @@ library(readr)
 library(stringi)
 setwd("C:/Users/betterlab/Desktop/git_andres/00.get_homologs_25subset")
 
-path<-"Alcanivoracaceae/alg_intersection/"
+#path<-"Alcanivoracaceae/alg_intersection/"
+path2<-"Flavobacteriaceae/alg_intersection/"
 
-example_gene<- "1415_accA_2.faa"
-listgenes<- c("1415_accA_2.faa","52012_nudJ.faa")
+#example_gene<- "1415_accA_2.faa"
+#listgenes<- c("1415_accA_2.faa","52012_nudJ.faa")
 
 #subset_shell_enzymes-------------------------------------------------------####
 search_shell_enzymes_DB<-function(csv_matrix,path){
@@ -85,7 +86,7 @@ search_shell_enzymes_DB<-function(csv_matrix,path){
 
     }
   }
-  new_fasta_file <- file("new2.fasta", "w")
+  new_fasta_file <- file("new3.fasta", "w")
   #enzyme<-filter_files(example_gene,shell_genes,path)
   # writeLines(enzyme,new_fasta_file, sep = "\n")
   #writeLines(sequence,new_fasta_file)
@@ -97,9 +98,49 @@ search_shell_enzymes_DB<-function(csv_matrix,path){
   })
 
   close(new_fasta_file)
+
+
+  fasta_lines <- readLines("new3.fasta")
+
+  # filter out the blank lines
+  non_blank_lines <- fasta_lines[!grepl("^\\s*$", fasta_lines)]
+
+  # write the non-blank lines back to the file
+  writeLines(non_blank_lines, "multiline_DB.fasta")
+
+  fasta_lines <- readLines("multiline_DB.fasta")
+
+  # initialize a counter for the sequence headers
+  header_counter <- 1
+
+  # loop over the lines and modify the sequence headers
+  for (i in 1:length(fasta_lines)) {
+    if (startsWith(fasta_lines[i], ">")) {
+      # this line is a sequence header
+      # extract the unique identifier from the header
+      header_id <- gsub(">[^ ]+ ", "", fasta_lines[i], perl=TRUE)
+      # construct the new header with the appended number
+      split<-stri_split(header_id, fixed = "|",simplify = TRUE)
+      new_header <- paste(split[1],header_counter,split[3],split[4],sep="|")
+      # replace the old header with the new one
+      fasta_lines[i] <- new_header
+      # increment the header counter
+      header_counter <- header_counter + 1
+    }
+  }
+  if (fasta_lines[length(fasta_lines)] == "") {
+    fasta_lines <- fasta_lines[-length(fasta_lines)]
+  }
+
+  # remove any trailing whitespace from the last line
+  fasta_lines[length(fasta_lines)] <- gsub("\\s+$", "", fasta_lines[length(fasta_lines)])
+  # write the modified character vector back to a new FASTA file
+  writeLines(fasta_lines, "FlavobacteriaceaeDB.fasta")
 }
 
-search_shell_enzymes_DB("pangenome_matrix_t0_Alcanivoracaceae.tr.csv",path)
+search_shell_enzymes_DB("pangenome_matrix_t0.tr.csv",path2)
+
+#fasta_lines <- readLines("new2.fasta")
 
 # >ID|1|accA_2|Alcanivoraxc15LHAGBDID_02122------------------------------#####
 
