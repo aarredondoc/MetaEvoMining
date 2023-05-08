@@ -103,17 +103,17 @@ search_shell_enzymes_DB("pangenome_matrix_t0_Alcanivoracaceae.tr.csv",path)
 
 # >ID|1|accA_2|Alcanivoraxc15LHAGBDID_02122------------------------------#####
 
-file_path <- file.path(paste0(getwd(),"/",path,example_gene,collapse = '|'))
-if (example_gene %in% shell_genes) {
-  x <- readLines(file_path)
-  sequence<-x[2]
-  first_seq <-c(x[1],x[2])
-  header<-first_seq[[1]][1]
-  fragments <- stri_split(as.character(header), fixed = "|",simplify = TRUE)
-  specie<-gsub("\\[|\\]","",fragments[2])
-  header<-paste(stri_split(fragments[1],fixed = ":",simplify = TRUE)[1],"1",fragments[5],paste0(gsub(" ","",specie),stri_split(fragments[1],fixed = ":",simplify = TRUE)[2]),sep="|")
-  new_fasta_file <- file("new1.fasta", "w")
-  writeLines(header,new_fasta_file)
-  writeLines(sequence,new_fasta_file)
-}
-close(new_fasta_file)
+#file_path <- file.path(paste0(getwd(),"/",path,example_gene,collapse = '|'))
+#if (example_gene %in% shell_genes) {
+#  x <- readLines(file_path)
+#  sequence<-x[2]
+#  first_seq <-c(x[1],x[2])
+#  header<-first_seq[[1]][1]
+#  fragments <- stri_split(as.character(header), fixed = "|",simplify = TRUE)
+#  specie<-gsub("\\[|\\]","",fragments[2])
+#  header<-paste(stri_split(fragments[1],fixed = ":",simplify = TRUE)[1],"1",fragments[5],paste0(gsub(" ","",specie),stri_split(fragments[1],fixed = ":",simplify = TRUE)[2]),sep="|")
+#  new_fasta_file <- file("new1.fasta", "w")
+#  writeLines(header,new_fasta_file)
+#  writeLines(sequence,new_fasta_file)
+#}
+#close(new_fasta_file)

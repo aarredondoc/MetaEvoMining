@@ -51,5 +51,5 @@ filter_interest_families<-function(EvoMinining_heatplot){
 }
   EF2<-evominining_table$`LINPD_3--LINC_SPHJU`
   above_mode_fun(EF2,Mydata_bins)
-setwd("C:/Users/betterlab/Desktop/git_andres/Heatmap_PlasticDB")
-filter_interest_families("Plastic_databasse - Rhodobacterales.tsv")
+#setwd()
+filter_interest_families("CentralDB_pangenome - Alcanivoracaceae.tsv")
