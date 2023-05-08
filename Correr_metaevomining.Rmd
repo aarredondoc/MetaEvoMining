@@ -1,0 +1,29 @@
+---
+title: "Correr_MetaEvoMining"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+## R Markdown
+
+# MODULO 1------------------------------------------------------------------####
+
+Correr Get_Homologs
+
+
+```{r setup, include=FALSE}
+#get_homologues.pl -
+```
+
+-select_centralDB_from_Pangenome
+
+
+# MODULO 2------------------------------------------------------------------####
+
+Correr function Make_evofiles
+
+
+```{r setup, include=FALSE}
+
+```
+# MODULO 3------------------------------------------------------------------####
