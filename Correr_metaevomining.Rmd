@@ -9,6 +9,7 @@ date: "`r Sys.Date()`"
 # MODULO 1------------------------------------------------------------------####
 
 Correr Get_Homologs
+#cambiarle el nombre
 
 
 ```{r setup, include=FALSE}
@@ -20,10 +21,42 @@ Correr Get_Homologs
 
 # MODULO 2------------------------------------------------------------------####
 
-Correr function Make_evofiles
+Correr function make_allnames_table
 
 
 ```{r setup, include=FALSE}
-
+make_allnames_table("data/gtdbtk.bac120.summary.tsv")
 ```
+
+Hacer el dataframe
+
+```{r setup, include=FALSE}
+make_dataframeforfile("data/all_namestable.IDs",
+                      "data/03/03.Proteome_named_scaff/5mSIPHEX1_18.faa",
+                      ">5mSIPHEX1_18-scaffold_1002_c1_1")
+```
+
+
+
+
+hacer un Archivo completo
+
+```{r setup, include=FALSE}
+library(plyr)
+library("rbims")
+make_complete_files("data/03/03.Proteome_named_scaff/5mSIPHEX1_18.faa",
+                    "data/all_namestable.IDs",
+                    "data/02.KO_results_all/")
+```
+```{r setup, include=FALSE}
+make_rastIDs_by_taxa('data/gtdbtk.bac120.summary.tsv',
+                     "f__Alteromonadaceae")
+```
+
+
+
 # MODULO 3------------------------------------------------------------------####
+
+make_EvoFiles("data/02.KO_results_all/",
+              "data/03/03.Proteome_named_scaff/",
+              "data/Saccharospirillaceae_bins.IDs")
