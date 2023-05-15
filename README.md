@@ -1,8 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
 
 # MetaEvoMining
 
@@ -83,4 +78,30 @@ make_EvoFiles(annotation_dirpath,
 ## Module 3
 
 ------------------------------------------------------------------------
+**\|Run EvoMining trees\|** This module runs EvoMining with the files resulting from the previous module. You can use the central database generated in module 1 or any database created with the EvoMining guidelines.
+
+```{r}
+
+#run_EvoMining
+
+```
+This function generates a table that reports the copy counts in the enzyme families.
+
+The generated table can be filtered with the following function.
+
+```{r}
+
+filter_interest_families("EvoMinining_heat_table.csv")
+
+```
+This function searches the EvoMining table and looks for columns (enzymes) where the counts in the input genomes are above the mode. It reports those columns in a list to run the trees.
+
+After that you can run the selected trees in the list and observe the predictions. Each branch has the id of the sequence so you can search it.
+
+```{r}
+
+#run_trees
+
+```
+
 
