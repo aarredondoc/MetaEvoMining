@@ -20,6 +20,13 @@ lineage.
 
 # Quick Start
 
+## Installation
+
+-----------------------------------------------------------------------
+
+You can install by cloning this repository from [github](https://github.com/andrespan/MetaEvoMining.git)
+
+
 ## Module 1(optional)
 
 ------------------------------------------------------------------------
