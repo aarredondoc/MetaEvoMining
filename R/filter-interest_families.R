@@ -3,6 +3,8 @@
 #' (enzymes) where the counts in the input genomes are above the mode. It
 #' reports those columns in a list to run the trees.
 #' @usage filter_interest_families(EvoMinining_heatplot)
+#' @param EvoMinining_heatplot is a copy count table where the columns are
+#' enzymes and the rows are the input genomes
 #' @details This function is part of a package used for the analysis of
 #' bins metabolism.
 #' @import dplyr rlang readr plyr

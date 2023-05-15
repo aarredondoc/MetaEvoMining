@@ -26,7 +26,7 @@ You can install by cloning this repository from [github](https://github.com/andr
 
 ------------------------------------------------------------------------
 
-**\|Get a central Database\|** We can create a database from two steps. The
+**\|Get a central Database\|** We can create a database in two steps. The
 first is the search for orthologous sequences by get_homologues.
 
 ```{r}
@@ -43,7 +43,7 @@ ready to use in the program.
     [get_homologs](http://eead-csic-compbio.github.io/get_homologues/manual/)
 
 -   The **path** is the output directory of alg_intersection of
-    get_homologs
+    [get_homologs](http://eead-csic-compbio.github.io/get_homologues/manual/)
 
 ```{r}
 
@@ -78,7 +78,7 @@ make_EvoFiles(annotation_dirpath,
 ## Module 3
 
 ------------------------------------------------------------------------
-**\|Run EvoMining trees\|** This module runs EvoMining with the files resulting from the previous module. You can use the central database generated in module 1 or any database created with the EvoMining guidelines.
+**\|Run EvoMining trees\|** This module runs EvoMining with the files resulting from the previous module. You can use the central database generated in module 1 or any database created with the [EvoMining guidelines.](https://github.com/nselem/evomining/wiki/Databases-Conformation)
 
 ```{r}
 
@@ -88,6 +88,8 @@ make_EvoFiles(annotation_dirpath,
 This function generates a table that reports the copy counts in the enzyme families.
 
 The generated table can be filtered with the following function.
+
+The **EvoMinining_heat_table.csv** is a copy count table where the columns are the enzyme families and the rows are the input genomes.
 
 ```{r}
 
