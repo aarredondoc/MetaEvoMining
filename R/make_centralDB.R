@@ -14,9 +14,9 @@
 #' @examples search_shell_enzymes_DB("pangenome_matrix_t0.tr.csv",path2)
 #' @noRd
 
-setwd("C:/Users/betterlab/Desktop/git_andres/00.get_homologs_25subset")
+#setwd("C:/Users/betterlab/Desktop/git_andres/00.get_homologs_25subset")
 
-path2<-"Flavobacteriaceae/alg_intersection/"
+#path2<-"Flavobacteriaceae/alg_intersection/"
 
 
 
@@ -81,10 +81,6 @@ search_shell_enzymes_DB<-function(csv_matrix,path){
         file = new_fasta_file, append = TRUE,sep = "")
   })
 
-  #close(new_fasta_file)
-
-
-  #fasta_lines <- readLines("new3.fasta")
 
   # filter out the blank lines----------------------------------------------####
   non_blank_lines <- fasta_lines[!grepl("^\\s*$", fasta_lines)]
@@ -120,4 +116,3 @@ search_shell_enzymes_DB<-function(csv_matrix,path){
   writeLines(fasta_lines, "Shell_DB.fasta")
 }
 
-#search_shell_enzymes_DB("pangenome_matrix_t0.tr.csv",path2)
