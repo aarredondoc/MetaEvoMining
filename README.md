@@ -80,23 +80,24 @@ make_EvoFiles(annotation_dirpath,
 ------------------------------------------------------------------------
 **\|Run EvoMining trees\|** This module runs EvoMining with the files resulting from the previous module. You can use the central database generated in module 1 or any database created with the [EvoMining guidelines.](https://github.com/nselem/evomining/wiki/Databases-Conformation)
 
+This function generates a table that reports the copy counts in the enzyme families.
+
 ```{r}
 
 #run_EvoMining
 
 ```
-This function generates a table that reports the copy counts in the enzyme families.
 
-The generated table can be filtered with the following function.
+The generated table can be filtered with the following function. This function searches the EvoMining table and looks for columns (enzymes) where the counts in the input genomes are above the mode. It reports those columns in a list to run the trees.
 
-The **EvoMinining_heat_table.csv** is a copy count table where the columns are the enzyme families and the rows are the input genomes.
+- The **EvoMinining_heat_table.csv** is a copy count table where the columns are the enzyme families and the rows are the input genomes.
 
 ```{r}
 
 filter_interest_families("EvoMinining_heat_table.csv")
 
 ```
-This function searches the EvoMining table and looks for columns (enzymes) where the counts in the input genomes are above the mode. It reports those columns in a list to run the trees.
+
 
 After that you can run the selected trees in the list and observe the predictions. Each branch has the id of the sequence so you can search it.
 
