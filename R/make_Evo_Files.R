@@ -51,15 +51,21 @@ make_EvoFiles <- function(gtdbK_report,
 
   # List all sample taxonomic families--------------------------------------####
   list_of_families<-c(sort(unique(taxonomy_table$family)))
+
   # create a functional annotation IDs file by family-----------------------####
-  make_taxonomyIDs_by_family(list_of_families,taxonomy_table)
+  make_IDs_by_taxa_files(list_of_families,taxonomy_table)
+
   # Make separate directories by family-------------------------------------####
-  make_directories_by_family(list_of_families,"data/")
+  make_directories_all_taxas(list_of_families,"data/")
+
   #create a new directory and move all results-----------------------------####
   path_results<-dir.create("data/Results")
-  #fam_nm<-strsplit(list_of_families,"__")
-  directories_toMove<-c(paste0("data/",lapply(strsplit(list_of_families,"__"),`[[`, 2)))
-  move_directories(directories_toMove, "data/Results")
+  directories_toMove<-c(paste0("data/",
+                               lapply(strsplit(list_of_families,"__"),`[[`, 2)))
+
+  move_directories(directories_toMove,
+                   "data/Results")
+
   # Remove the original directories
 
 
