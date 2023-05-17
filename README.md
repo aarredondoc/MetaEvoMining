@@ -11,7 +11,7 @@ biosynthetic pathways. MetaEvoMining searches for differences among
 homologous sequences from organisms that share a common evolutionary
 lineage.
 
-![figure1](image_2.svg)![figure2](image_1.svg)
+![figure1](inst/extdata/image_2.svg)![figure2](inst/extdata/image_1.svg)
 
 # Quick Start
 

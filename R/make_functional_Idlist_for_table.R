@@ -19,6 +19,7 @@ make_Idlist <- function(file){
   grep_index <- grep(">",file)
   ID_lines <- file[grep_index]
   Id <- strsplit(ID_lines, "#")
+
   # list all ---------------------------------------------------------------####
   IDs <- sapply(Id, `[`, 1)
   return (IDs)

@@ -2,16 +2,19 @@
 #' @description This function takes a list of rast-alike ids and copies all
 #' those files matching list to a destination directory
 #' @usage make_directories_by_taxa(inputdir,taxa)
-#' @param input is the  path of the input files directory
+#' @param inputdir is the  path of the input files directory
 #' @param taxa is the taxonomic family
 #' @details This function uses a _bins.IDs file for specie and list the files
 #' that match with those genomes.the function also makes a parent directory with
 #' the name of the family, and another dir inside of them, and copies all the
 #' files selected in the list. After that, copy the bins.IDs file to family
 #' directory and finally remove all files that has already copied.
-#' @import readr dplyr plyr
-#' @examples make_directories_by_taxa("data/","f__Saccharospirillaceae")
-#' @export
+#' @import readr dplyr
+#' @examples
+#' \dontrun{
+#' make_directories_by_taxa("data/","f__Saccharospirillaceae")
+#' }
+#' @noRd
 
 make_directories_by_taxa<-function(inputdir,taxa){
 #make the name of family directory and create it----------------------------####

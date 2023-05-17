@@ -11,29 +11,23 @@
 #' dataframe.
 #' @return a four-column file containing a 6-digit numeric name, a unique
 #' identifier, the user-assigned genome name, and the taxonomic mapping.
-#' @import readr dplyr
-#' @examples make_taxonomy_table("data/gtdbtk.bac120.summary.tsv")
-#' @export
+#' @import readr dplyr purrr
+#' @examples make_taxonomy_table("inst/extdada/gtdbtk.bac120.summary.tsv")
+#' @noRd
 
 make_taxonomy_table<-function(gtdbK_report){
 
-# Read the file------------------------------------------------------------####
+  # Read the file------------------------------------------------------------####
   gtdbK_file <- read_tsv(gtdbK_report)
 
 
-#make_taxonomy_id()
-# apply to a list of IDs --------------------------------------------------####
-userg_list<-gtdbK_file$user_genome
+  #make_taxonomy_id()
+  # apply to a list of IDs --------------------------------------------------####
+  userg_list<-gtdbK_file$user_genome
 
-taxonomy_table<- plyr::ldply(.data =userg_list,
-                             .fun= function(x) make_taxonomy_id(gtdbK_file,x),
-                             .inform = FALSE)
 
-# Write the file with all names and IDs------------------------------------####
+  taxonomy_table <- map_df(userg_list, ~ make_taxonomy_id(gtdbK_file, .))
 
-#write.table(taxon_assig , file =  "data/taxonomy_table.IDs", sep = "\t",
-#            dec = ".", row.names = FALSE, col.names = FALSE, quote=FALSE)
-return(taxonomy_table)
+
+  return(taxonomy_table)
 }
-
-

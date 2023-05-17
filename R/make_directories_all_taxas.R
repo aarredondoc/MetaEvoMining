@@ -7,7 +7,7 @@
 #' @details This function uses lapply to make all the family directories with
 #' group_files_by_taxa function.
 #' @import readr dplyr
-#' @examples make_directories_all_taxas(list_of_families,taxonomy_table)
+#' @examples make_directories_all_taxas(list_of_families,inputdir)
 #' @noRd
 
 make_directories_all_taxas<-function(list_of_families,inputdir){

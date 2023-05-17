@@ -7,9 +7,12 @@
 #' enzymes and the rows are the input genomes
 #' @details This function is part of a package used for the analysis of
 #' bins metabolism.
-#' @import dplyr rlang readr plyr
+#' @import readr
+#' @importFrom utils write.table
 #' @examples
+#' \dontrun{
 #' filter_interest_families("results/Oleiphillaceae_evomining_table.tsv")
+#' }
 #' @export
 
 
@@ -48,4 +51,4 @@ write.table(nameskeepcol, file= paste(fam_name,"_runtreeevo_AAD_DB.txt", sep = "
 
 }
 
-filter_interest_families("results/Oleiphillaceae_evomining_table.tsv")
+#filter_interest_families("results/Oleiphillaceae_evomining_table.tsv")

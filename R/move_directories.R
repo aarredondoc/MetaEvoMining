@@ -2,10 +2,10 @@
 #' @description This function takes a list of rast-alike ids and copies all those files
 #' matching list to a destination directory
 #' @usage move_directories(dir_paths, target_dir_path)
-#' @param taxa is the taxonomic rank
+#' @param dir_paths is a list of directories to move
+#' @param target_dir_path is a target directory
 #' @details This function is part of the MetaEvoMining package
-#' @import readr dplyr plyr
-#' @examples move_directories(dir_paths, target_dir_path)
+#' @examples move_directories(directories_toMove, "data/Results")
 #' @noRd
 
 move_directories <- function(dir_paths, target_dir_path) {
@@ -22,4 +22,4 @@ move_directories <- function(dir_paths, target_dir_path) {
   }
 }
 
-move_directories(directories_toMove, "data/Results")
+#move_directories(directories_toMove, "data/Results")

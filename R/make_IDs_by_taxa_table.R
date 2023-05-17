@@ -2,13 +2,14 @@
 #' @description Esta función toma el archivo gtdb-tk y busca los MAGs que
 #' pertenecen a la misma clase taxonómica y regresa un archivo parecido al ids
 #' de rast las filas son: nombre numérico, identificador único y especie
-#' @usage make_IDs_by_taxa_table(gtdbK_report,taxa)
+#' @usage make_IDs_by_taxa_table(fam,gtdbK_report)
 #' @param gtdbK_report is a tsv file wich was create by
 #' [gtdbtk](https://github.com/Ecogenomics/GTDBTk.git) program.
 #' @details This function is part of the MODULE2 of MetaEvoMining package
 #' 2023_03_15
-#' @import readr dplyr
-#' @examples make_IDs_by_taxa_table(taxonomy_table)
+#' @import readr
+#' @importFrom utils write.table
+#' @examples make_IDs_by_taxa_table("f__Alcanivoracaceae",taxonomy_table)
 #' @noRd
 make_IDs_by_taxa_table<- function(fam,gtdbK_report){
 

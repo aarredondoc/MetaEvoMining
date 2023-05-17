@@ -20,10 +20,10 @@
 #' ID up to the number after "scaffold" to the "contig_id" column, calculates
 #' the species based on the ID, and outputs the results in an empty dataframe.
 #' Finally, it fills in the rows of the dataframe with the relevant information.
-#' @import readr dplyr
-#' @examples make_dataframeforfile("data/all_namestable.IDs",
-#'                          "data/03/03.Proteome_named_scaff/5mSIPHEX1_18.faa",
-#'                                          ">5mSIPHEX1_18-scaffold_1002_c1_1")
+#' @import readr dplyr stringi
+#' @examples make_dataframeforfile(taxonomy_table,
+#'           "inst/extdata/Proteome_named_scaff/5mSIPHEX1_18.faa",
+#'                                          ">5mSIPHEX1_0-scaffold_1104_c1_1")
 #' @noRd
 
 

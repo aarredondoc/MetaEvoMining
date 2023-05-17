@@ -12,5 +12,8 @@ LazyData: true
 RoxygenNote: 7.2.3
 Imports:
   dplyr,
-  rlang,
-  readr
+  readr,
+  stringi,
+  purrr,
+  stringr,
+  tidyr

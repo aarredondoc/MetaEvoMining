@@ -11,7 +11,10 @@
 #' names, and returns the first line of each file in the list concatenated into
 #' a new file.It returns this header # >ID|1|accA_2|Alcanivoraxc15LHAGBDID_02122
 #' @import readr dplyr stringi
-#' @examples search_shell_enzymes_DB("pangenome_matrix_t0.tr.csv",path2)
+#' @examples
+#' \dontrun{
+#' search_shell_enzymes_DB("pangenome_matrix_t0.tr.csv",path2)
+#' }
 #' @noRd
 
 #setwd("C:/Users/betterlab/Desktop/git_andres/00.get_homologs_25subset")
@@ -47,7 +50,7 @@ search_shell_enzymes_DB<-function(csv_matrix,path){
   #allrow_values
   matrix_subset$gene<-Pangenome_matrix$Gene
   matrix_subset$more_than_half<-allrow_values
-  matrix_subset<-filter(matrix_subset,more_than_half == TRUE)
+  matrix_subset<-filter(matrix_subset,.data$more_than_half == TRUE)
   shell_genes<- matrix_subset$gene
 
 
@@ -70,7 +73,7 @@ search_shell_enzymes_DB<-function(csv_matrix,path){
 
     }
   }
-  #new_fasta_file <- file("new3.fasta", "w")
+
 
   fasta_lines <- lapply(shell_genes, function(file) {
     enzyme<-filter_files(file,shell_genes,path)
@@ -78,7 +81,7 @@ search_shell_enzymes_DB<-function(csv_matrix,path){
               "\n",
               gsub(" ","",gsub("(.{80})", "\\1\n", enzyme[2], perl=TRUE)),
               collapse = "",sep = ""),"\n",
-        file = new_fasta_file, append = TRUE,sep = "")
+        file = .data$new_fasta_file, append = TRUE,sep = "")
   })
 
 

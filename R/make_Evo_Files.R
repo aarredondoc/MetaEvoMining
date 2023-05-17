@@ -3,43 +3,38 @@
 #' obtenidas de prodigal, el directorio de los outputs de KO y el archivo
 #' resultado de la funcion allrast_names_table y regresa un archivo anotado con
 #' especie y un fasta con los feature ids de rast simulados
-#' @usage make_EvoFiles(annotation_dirpath,
-#'                          genome_dirpath,
-#'                              IDs_table)
-#' @param annotation_dirpath is the path of annotation output directory created
-#' by [KofamScan](https://github.com/takaram/kofam_scan.git).
-#' @param genome_dirpath is the path of all protein sequences files of all the
-#' bins
+#' @usage make_EvoFiles(gtdbK_report, genomes_dirpath, annotation_dirpath)
 #' @param gtdbK_report gtdbK_report is a tsv file wich was create by
 #' [gtdbtk](https://github.com/Ecogenomics/GTDBTk.git) program.
+#' @param genomes_dirpath is the path of all protein sequences files of all the
+#' bins
+#' @param annotation_dirpath is the path of annotation output directory created
+#' by [KofamScan](https://github.com/takaram/kofam_scan.git).
 #' @details This function is part of the MetaEvoMining package
 #' @import readr dplyr
 #' @return a list of all sequence IDs in the file
-#' @examples make_EvoFiles("Datos/02.KO_results_all/",
-#'                         'data/03/03.Proteome_named_scaff/',
-#'                         "data/gtdbtk.bac120.summary.tsv")
+#' @examples
+#' \dontrun{
+#'  make_EvoFiles("inst/extdata/gtdbtk.bac120.summary.tsv",
+#'                             "inst/extdata/Proteome_named_scaff/",
+#'                                                "inst/KO_output/")
+#'}
 #' @export
 
 make_EvoFiles <- function(gtdbK_report,
-                          genome_dirpath,
+                          genomes_dirpath,
                           annotation_dirpath){
 
-  # Make all namestable ----------------------------------------------------####
-  # Merge genome names and taxonomy from gdtbtk ----------------------------####
 
-  #allnames_table<-make_allnames_table(gtdbK_report)
+  # make_taxonomy_table-----------------------------------------------------####
   taxonomy_table<-make_taxonomy_table(gtdbK_report)
-  # make_taxonomy_table
 
-  # Make all the files for Evomining for a directory------------------------####
-  # Merge taxonomy table and functional annotation -------------------------####
 
-  dir <- genome_dirpath
+  # Make the funtion make_complete_files to all the input files ------------####
+
+  dir <- genomes_dirpath
   allFiles <- list.files(dir)
-  # que j no se llame j, dir_allFiles
   dir_allFiles<-c(paste(dir,allFiles,sep = ""))
-   #list<-c("data/03/03.Proteome_named_scaff/700mSIPHEX2_24.faa",
-      #    "data/03/03.Proteome_named_scaff/700mSIPHEX2_9.faa")
 
   output<-lapply(dir_allFiles,
                  function(x) make_complete_files(x,
@@ -68,15 +63,4 @@ make_EvoFiles <- function(gtdbK_report,
 
   # Remove the original directories
 
-
 }
-
-make_EvoFiles("data/gtdbtk.bac120.summary.tsv",
-              "data/03/03.Proteome_named_scaff/",
-              "data/02.KO_results_all/")
-
-
-#gtdbK_report == "data/gtdbtk.bac120.summary.tsv"
-
-#annotation_dirpath== "data/02.KO_results_all/"
-#genome_dirpath =="data/03/03.Proteome_named_scaff/"
