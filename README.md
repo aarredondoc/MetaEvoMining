@@ -19,8 +19,31 @@ lineage.
 
 -----------------------------------------------------------------------
 
-You can install by cloning this repository from [github](https://github.com/andrespan/MetaEvoMining.git)
+This package is setting in [github](https://github.com/andrespan/MetaEvoMining.git).
 
+Before installing it, you need to do the following:
+
+1. You need to install devtools first.
+
+```{r}
+
+install.packages("devtools")
+```
+
+2. Once devtools is installed, we need to load it
+
+```{r}
+
+library(devtools)
+```
+
+3. Then you can install the MetaEvoMining package with install_packages
+
+```{r}
+
+install_github("andrespan/MetaEvoMining")
+
+```
 
 ## Module 1(optional)
 

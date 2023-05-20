@@ -3,9 +3,7 @@
 #' an annotation ID table, the result of the allrast_names_table function,
 #' and returns a dataframe with ID, coordinates 1 and 2, and amino acid
 #' sequences.
-#' @usage make_dataframeforfile(IDs_table,
-#'                                  file_fasta,
-#'                                          id)
+#' @usage make_dataframeforfile(IDs_table, file_fasta, id)
 #' @param IDs_table is a table of IDs made by make_allnamestable function
 #' @param file_fasta is a path to a FASTA protein file.
 #' @param id is an id of a sequence of the file.
@@ -22,8 +20,8 @@
 #' Finally, it fills in the rows of the dataframe with the relevant information.
 #' @import readr dplyr stringi
 #' @examples make_dataframeforfile(taxonomy_table,
-#'           "inst/extdata/Proteome_named_scaff/5mSIPHEX1_18.faa",
-#'                                          ">5mSIPHEX1_0-scaffold_1104_c1_1")
+#' "inst/extdata/Proteome_named_scaff/5mSIPHEX1_18.faa",
+#' ">5mSIPHEX1_0-scaffold_1104_c1_1")
 #' @noRd
 
 
@@ -44,6 +42,7 @@ make_dataframeforfile <- function(IDs_table,
   grep_line <- stri_detect_fixed(multi_fasta,I(id))
   index_line<-which(grep_line==TRUE)
   full_line<-multi_fasta[index_line]
+
   # Cut the ID only -----------------------------------------------------####
   Id_split <-strsplit(full_line, "#")
   ID_only<-Id_split[[1]][1]
@@ -89,7 +88,7 @@ make_dataframeforfile <- function(IDs_table,
 
   # Make an empty dataframe ---------------------------------------------####
   df <- data.frame(matrix(ncol = 13, nrow = 0))
-  colnames(df) <-c("contig_id",	"feature_id",	"type",	"location", "start",
+  colnames(df) <- c("contig_id",	"feature_id",	"type",	"location", "start",
                    "stop", "strand",	"locus_tag",	"figfam",	"species",
                    "nucleotide_sequence",	"amino_acid",	"sequence_accession")
 

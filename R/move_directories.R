@@ -1,6 +1,5 @@
 #' @title Group files by taxa
-#' @description This function takes a list of rast-alike ids and copies all those files
-#' matching list to a destination directory
+#' @description This function takes the files created with the make_directories
 #' @usage move_directories(dir_paths, target_dir_path)
 #' @param dir_paths is a list of directories to move
 #' @param target_dir_path is a target directory

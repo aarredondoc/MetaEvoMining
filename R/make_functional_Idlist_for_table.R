@@ -10,7 +10,7 @@
 #' @return a list of all sequence IDs in the file
 #' @examples make_Idlist(file)
 #' @noRd
-#'
+
 # read file -------------------------------------------------------------#####
 
 make_Idlist <- function(file){
@@ -22,6 +22,7 @@ make_Idlist <- function(file){
 
   # list all ---------------------------------------------------------------####
   IDs <- sapply(Id, `[`, 1)
+
   return (IDs)
 }
 

@@ -1,4 +1,3 @@
-
 #' @title Make rast IDs file by taxa
 #' @description Esta función toma el archivo gtdb-tk y busca los MAGs que
 #' pertenecen a la misma clase taxonómica y regresa un archivo parecido al ids
@@ -12,7 +11,8 @@
 #' @import readr
 #' @examples make_IDs_by_taxa_files(list_of_families,taxonomy_table)
 #' @noRd
-make_IDs_by_taxa_files<-function(list_of_families,gtdbK_report){
+make_IDs_by_taxa_files<-function(list_of_families,
+                                 gtdbK_report){
 
 
 output<-lapply(list_of_families,function(x)make_IDs_by_taxa_table(x,
