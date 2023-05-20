@@ -16,67 +16,68 @@
 #' }
 #' @noRd
 
-make_directories_by_taxa<-function(inputdir,taxa){
-#make the name of family directory and create it----------------------------####
-file_name_var <- taxa
-fam_nm<-strsplit(file_name_var,"__")
-fam_name <-fam_nm[[1]][2]
+make_directories_by_taxa<-function(inputdir,
+                                   taxa){
+  # make the name of family directory and create it-------------------------####
+  file_name_var <- taxa
+  fam_nm<-strsplit(file_name_var,"__")
+  fam_name <-fam_nm[[1]][2]
 
-parent_directory<-dir.create(paste0("data/",fam_name))
-#make the name of output directory------------------------------------------####
-get_dir_name <- function() {
+  parent_directory<-dir.create(paste0("data/",fam_name))
+  # make the name of output directory---------------------------------------####
+  get_dir_name <- function() {
   #today <- format(Sys.Date(), "%Y-%m-%d")
   return(paste0("data/",fam_name,"/",fam_name,"_bins"))
-}
+  }
 
-# Create the directory using the function to generate the name--------------####
-dir_name <- get_dir_name()
-targetdir <- dir.create(dir_name)
-targetdir
-dir_name
+  # create the directory using the function to generate the name------------####
+  dir_name <- get_dir_name()
+  targetdir <- dir.create(dir_name)
 
-# load the bins.IDs file----------------------------------------------------####
-fileIDS <- list.files("data/",pattern = c(paste(fam_name,"_bins.IDs",sep="")))
-df <- readLines(c(paste("data/",fileIDS,sep="")))
+  # load the bins.IDs file--------------------------------------------------####
+  fileIDS <- list.files("data/",pattern = c(paste(fam_name,"_bins.IDs",sep="")))
+  df <- readLines(c(paste("data/",fileIDS,sep="")))
 
-# search for the first element which is the name and makes a list------------####
-v1<-strsplit(df, '\t')
-listofnames<-lapply(v1,`[[`, 1)
-listofnames
+  # search for the first element which is the name and makes a list---------####
+  v1<-strsplit(df, '\t')
+  listofnames<-lapply(v1,`[[`, 1)
 
-# 1. list all the filesin the input directory-------------------------------####
-filestocopy <- gsub(".txt","",
+
+  # list all the filesin the input directory--------------------------------####
+  filestocopy <- gsub(".txt","",
                     gsub(".faa","",
                          list.files(inputdir,full.names = TRUE)))
 
-# 2. keep only the files that match with the .faa and .txt patterns---------####
-filestocopy <- unique(grep(paste(listofnames,collapse="|"),
-                           filestocopy,
-                           value=TRUE))
+  # keep only the files that match with the .faa and .txt patterns----------####
+  filestocopy <- unique(grep(paste(listofnames,collapse="|"),
+                             filestocopy,
+                             value=TRUE))
 
-# 2.1 put the list of .faa and .txt patterns together
-faa <- paste(filestocopy,".faa",sep = "")
-txt <- paste(filestocopy,".txt",sep = "")
-filestocopy<-c(faa,txt)
-
-
-
-# 3. copy the listed files--------------------------------------------------####
-sapply(filestocopy, function(x) file.copy(from=x, to=dir_name, copy.mode = TRUE))
+  # put the list of .faa and .txt patterns together-------------------------####
+  faa <- paste(filestocopy,".faa",sep = "")
+  txt <- paste(filestocopy,".txt",sep = "")
+  filestocopy<-c(faa,txt)
 
 
-# 4. copy the bins.IDs file to parent directory-----------------------------####
-binsidfile<-c(paste("data/",fileIDS,sep=""))
 
-file.copy(from=binsidfile,
-          to=paste0("data/",fam_name,"/"),
-          copy.mode = TRUE)
+  # copy the listed files---------------------------------------------------####
+  sapply(filestocopy, function(x) file.copy(from=x,
+                                            to=dir_name,
+                                            copy.mode = TRUE))
 
-# 5. remove all files that already copied--------------------------------------####
-files_to_remove<-c(filestocopy,binsidfile)
 
-unlink(files_to_remove,
-       recursive = FALSE,
-       force = FALSE)
+  # copy the bins.IDs file to parent directory------------------------------####
+  binsidfile<-c(paste("data/",fileIDS,sep=""))
+
+  file.copy(from=binsidfile,
+            to=paste0("data/",fam_name,"/"),
+            copy.mode = TRUE)
+
+  # remove all files that already copied------------------------------------####
+  files_to_remove<-c(filestocopy,binsidfile)
+
+  unlink(files_to_remove,
+         recursive = FALSE,
+         force = FALSE)
 
 }
