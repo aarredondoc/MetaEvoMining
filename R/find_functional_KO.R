@@ -17,11 +17,11 @@ find_metabolic_function <-function(scaffold_id,KO_report){
   # search the id----------------------------------------------------------####
   grep_id <-KO_report[scaffold_id==KO_report$Scaffold_name, ]
 
-  # regresar un dataframe que contenga ID y metabolic----------------------####
+  # returns a dataframe with the first metabolic function-------------------####
   grep_id[1,3]
   metabolic<-  grep_id[1,3]
 
-  # agregar un > al id-----------------------------------------------------####
+  # adds a > to the id-------------------------------------------------------####
   dataframe <- data.frame(unique(scaffold_id),metabolic)
 
   return(dataframe)

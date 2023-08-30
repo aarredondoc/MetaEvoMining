@@ -17,66 +17,64 @@
 #' }
 #' @noRd
 
-#setwd("C:/Users/betterlab/Desktop/git_andres/00.get_homologs_25subset")
 
-#path2<-"Flavobacteriaceae/alg_intersection/"
-
-
-
-#subset_shell_enzymes-------------------------------------------------------####
-search_shell_enzymes_DB<-function(csv_matrix,path){
+search_shell_enzymes_DB<-function(csv_matrix,
+                                  path){
 
   # load the pangenome matrix and select count columns----------------------####
 
   Pangenome_matrix <- read_csv(paste0(path,csv_matrix))
-  cols_to_keep<-grep("*.gbk", names(Pangenome_matrix), value= TRUE)
-  matrix_subset<-Pangenome_matrix[cols_to_keep]
-  #cut_matrix <- Pangenome_matrix[,15:26]
-  row1<-matrix_subset[1,]
+  cols_to_keep <- grep("*.gbk", names(Pangenome_matrix), value= TRUE)
+  matrix_subset <- Pangenome_matrix[cols_to_keep]
+  row1 <- matrix_subset[1,]
 
-  #select the genes which has copies in more than half --------------------####
+  # select the genes which has copies in more than half --------------------####
   makerow_ofcondition <- function (row) {
     V <- as.logical(row)
-    keepvalue<-sum(V)>length(V)/2
-    #  make a function applied to all rows in a dataframe
-    # Setting row names from a column
+    keepvalue <- sum(V)>length(V)/2
     return(keepvalue)
   }
 
+  # apply the function to all rows and obtain a matrix subset---------------####
 
-  # apply the function to all rows and obtain a matrix subset-------------------####
-
-  allrow_values<-apply(matrix_subset,MARGIN = 1, makerow_ofcondition)
-  #allrow_values
-  matrix_subset$gene<-Pangenome_matrix$Gene
-  matrix_subset$more_than_half<-allrow_values
-  matrix_subset<-filter(matrix_subset,.data$more_than_half == TRUE)
-  shell_genes<- matrix_subset$gene
+  allrow_values <- apply(matrix_subset,MARGIN = 1, makerow_ofcondition)
+  matrix_subset$gene <- Pangenome_matrix$Gene
+  matrix_subset$more_than_half <- allrow_values
+  matrix_subset <- filter(matrix_subset,.data$more_than_half == TRUE)
+  shell_genes <- matrix_subset$gene
 
 
-  # This function has a input file a list of file names
-  # and returns the first line of each file---------------------------------####
+  # this function has a input file a list of file names and returns the first
+  # line of each file-------------------------------------------------------####
 
-  filter_files<-function(file,lista,path) {
+  filter_files <- function(file,lista,path) {
     file_path <- file.path(paste0(getwd(),"/",path,file,collapse = '|'))
     if (file %in% lista) {
       x <- readLines(file_path)
-      sequence<-x[2]
-      first_seq <-c(x[1],x[2])
-      header<-first_seq[[1]][1]
+      sequence <- x[2]
+      first_seq <- c(x[1],x[2])
+      header <- first_seq[[1]][1]
       fragments <- stri_split(as.character(header), fixed = "|",simplify = TRUE)
-      specie<-gsub("\\[|\\]","",fragments[2])
-      header<-paste(stri_split(fragments[1],fixed = ":",simplify = TRUE)[1],"1",gsub(" ","_",fragments[5]),paste0(gsub(" ","",specie),gsub(" ","",stri_split(fragments[1],fixed = ":",simplify = TRUE)[2])),sep="|")
+      specie <- gsub("\\[|\\]","",fragments[2])
+      header <- paste(
+        stri_split(fragments[1],fixed = ":",simplify = TRUE)[1],
+        "1", gsub(" ","_",fragments[5]),
+        paste0(gsub(" ","",specie),gsub(" ",
+                                        "",
+                                        stri_split(fragments[1],
+                                                   fixed = ":",
+                                                   simplify = TRUE)[2]
+                                        )
+               ),
+        sep="|")
       format<-c(header,sequence)
       return(format)
-
-
     }
   }
 
 
   fasta_lines <- lapply(shell_genes, function(file) {
-    enzyme<-filter_files(file,shell_genes,path)
+    enzyme <- filter_files(file,shell_genes,path)
     cat(paste(enzyme[1],
               "\n",
               gsub(" ","",gsub("(.{80})", "\\1\n", enzyme[2], perl=TRUE)),
@@ -96,14 +94,16 @@ search_shell_enzymes_DB<-function(csv_matrix,path){
   # loop over the lines and modify the sequence headers---------------------####
   for (i in 1:length(fasta_lines)) {
     if (startsWith(fasta_lines[i], ">")) {
-      # this line is a sequence header
       # extract the unique identifier from the header-----------------------####
       header_id <- gsub(">[^ ]+ ", "", fasta_lines[i], perl=TRUE)
-      # construct the new header with the appended number
+
+      # construct the new header with the appended number-------------------####
       split<-stri_split(header_id, fixed = "|",simplify = TRUE)
       new_header <- paste(split[1],header_counter,split[3],split[4],sep="|")
+
       # replace the old header with the new one-----------------------------####
       fasta_lines[i] <- new_header
+
       # increment the header counter----------------------------------------####
       header_counter <- header_counter + 1
     }
@@ -115,6 +115,7 @@ search_shell_enzymes_DB<-function(csv_matrix,path){
   # remove any trailing whitespace from the last line-----------------------####
   fasta_lines[length(fasta_lines)] <- gsub("\\s+$", "",
                                            fasta_lines[length(fasta_lines)])
+
   # write the modified character vector back to a new FASTA file------------####
   writeLines(fasta_lines, "Shell_DB.fasta")
 }

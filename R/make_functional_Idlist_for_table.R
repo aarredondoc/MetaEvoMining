@@ -11,7 +11,6 @@
 #' @examples make_Idlist(file)
 #' @noRd
 
-# read file -------------------------------------------------------------#####
 
 make_Idlist <- function(file){
 

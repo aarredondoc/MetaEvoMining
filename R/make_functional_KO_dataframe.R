@@ -14,13 +14,13 @@
 #' @noRd
 suppressWarnings({
 make_functional_KO_dataframe<-function(ko_dir){
-files <- dir(path = ko_dir ,pattern ="*.txt")
-final_files<-paste0(ko_dir, files)
-table_Kofam<-
-    final_files %>%
-      map_dfr(read_table2, col_names = F) %>%
-      filter(str_detect(.data$X1, '\\*')) %>%
-      select(.data$X2,.data$X3) %>%
+  files <- dir(path = ko_dir ,pattern ="*.txt")
+  final_files<-paste0(ko_dir, files)
+  table_Kofam<-
+      final_files %>%
+        map_dfr(read_table2, col_names = F) %>%
+        filter(str_detect(.data$X1, '\\*')) %>%
+        select(.data$X2,.data$X3) %>%
   dplyr::rename(Bin_name = .data$X2) %>%
   dplyr::rename(KO = .data$X3) %>%
   separate(.data$Bin_name, c("Bin_name", "Scaffold_name"),

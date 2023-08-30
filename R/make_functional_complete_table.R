@@ -23,52 +23,44 @@
 #' @noRd
 
 
-make_complete_files<-function(file_path,
+make_complete_files <- function(file_path,
                               IDs_table,
                               annotation_dirpath) {
-  # Load table and multifasta file --------------------------------------####
+  # load table and multifasta file -----------------------------------------####
   multifasta_file <- readLines(file_path)
-
-  #cargamos el archivo de los rastids -------------------------------------####
   rast_ids<-IDs_table
 
-  #Con esta funcion Obtenemos una lista con todos los IDs del archivo-------####
-  listof_ids<- I(as.list(make_Idlist(multifasta_file)))
+  # This code makes a list of all sequence ids------------------------------####
+  listof_ids <- I(as.list(make_Idlist(multifasta_file)))
 
-  # Make table.txt----------------------------------------------------------####
-
-  #df_1235<-plyr::ldply(.data = I(listof_ids),
-  #                     .fun= function(x) make_dataframeforfile(rast_ids,
-  #                                                             multifasta_file,
-  #                                                             I(x)))
+  # this code make the full dataframe---------------------------------------####
 
   df_1235 <- map_dfr(listof_ids,
                      ~ make_dataframeforfile(rast_ids, multifasta_file, .))
 
 
 
-  #con la funcion read_ko buscar en la tabla la columna 3 (id KO)-----------####
+  # this code reads the KEGG file-------------------------------------------####
 
-  n<-strsplit(listof_ids[[1]][1],"-")[[1]][1]
-  w<-gsub(">","",n)
-  k0_file<-make_functional_KO_dataframe(paste(annotation_dirpath,
+  n < -strsplit(listof_ids[[1]][1],"-")[[1]][1]
+  w <- gsub(">","",n)
+  k0_file <- make_functional_KO_dataframe(paste(annotation_dirpath,
                                               w,
                                               ".faa.txt"
                                               ,sep = ""))
 
+  # this code clean the ids--- ---------------------------------------------####
+  Lista_IDs <- gsub(" ","",gsub(">","",gsub("-scaffold","_scaffold",listof_ids)))
 
-  # ahora lo voy a aplicar a una lista de IDs ------------------------------####
-  Lista_IDs<-gsub(" ","",gsub(">","",gsub("-scaffold","_scaffold",listof_ids)))
+  # this code makes a table with functional annotation per sequence---------####
 
-  # aplicamos funcion para todos los ids------------------------------------####
-  #ko_df<- plyr::ldply(.data =Lista_IDs,
-  #                    .fun= function(x) find_metabolic_function(x,k0_file))
-  ko_df <- map_dfr(Lista_IDs, ~ find_metabolic_function(.x, k0_file))
+  ko_df <- map_dfr(Lista_IDs, ~ find_metabolic_function(.x,
+                                                        k0_file))
 
   # change the name of the column function ---------------------------------####
   colnames(ko_df)[2] <- "function"
 
-  # Unir el ko_df y el del archivo_txt con merge----------------------------####
+  # this code merge ko data with the full functional table------------------####
 
   df_final = merge(x = df_1235 , y = ko_df, by.y = 1, by.x=13, all.x = TRUE)
 
@@ -77,12 +69,12 @@ make_complete_files<-function(file_path,
                   "species",	"nucleotide_sequence",	"amino_acid",
                   "sequence_accession")
 
-  dat_2$feature_id<-paste(dat_2$feature_id,seq(1, nrow(dat_2)),sep = "")
+  dat_2$feature_id <- paste(dat_2$feature_id,seq(1, nrow(dat_2)),sep = "")
 
-  #Para crear el archivo de rast con writetable-----------------------------####
-  name<-rast_ids[rast_ids$user_genome == w,]
-  id_num<-name$id_numero
-  rast_able<-write.table(dat_2, paste("data/",id_num,".txt",sep = ""),
+  # write the full functionl table------------------------------------------####
+  name <- rast_ids[rast_ids$user_genome == w,]
+  id_num <- name$id_numero
+  rast_able <- write.table(dat_2, paste("data/",id_num,".txt",sep = ""),
                          append = F,
                          sep = '\t',
                          dec = ".",
@@ -90,7 +82,7 @@ make_complete_files<-function(file_path,
                          col.names = TRUE,
                          quote=FALSE)
 
-  #Para crear el .faa-------------------------------------------------------####
+  # write the protein fasta file--------------------------------------------####
   Xfasta <- character(nrow(dat_2) * 2)
   Xfasta[c(TRUE, FALSE)] <- paste(">", dat_2$feature_id, sep = "")
   Xfasta[c(FALSE, TRUE)] <- dat_2$amino_acid

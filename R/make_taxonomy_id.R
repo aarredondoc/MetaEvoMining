@@ -17,13 +17,13 @@
 
 make_taxonomy_id <- function(table,
                              assembly_name){
-  # search the row of id in gtdbk_file user_genome column------------------####
+  # search the row of id in gtdbk_file user_genome column-------------------####
   assembly_name_index<-table[table$user_genome == assembly_name,]
 
-  # find the row on the gtdbk that corresponds to the classification-------####
+  # find the row on the gtdbk that corresponds to the classification--------####
   assembly_classification<-strsplit(assembly_name_index$classification, ";")
 
-  # find the specie assigned or genus or family----------------------------####
+  # find the specie assigned or genus or family-----------------------------####
   specie<-lapply(assembly_classification,`[[`, 7)
   lineage<-specie
   if(specie == "s__"){

@@ -4,23 +4,19 @@
 #' @usage filter_EF_above_mode(f,g_names)
 #' @param f a vector that contains a column
 #' @param g_names a is a vector that contains genome names
-#' @details returtrue or false if the genomes are in the column above the mode
+#' @details returns true or false if the genomes are in the column above the
+#' mode or not
 #' @import dplyr readr
 #' @examples filter_EF_above_mode(EF2,Mydata_bins)
 #' @return true or false if the genomes are in the column above the mode
 #' @noRd
 
-##above_mode_fun------------------------------------------------------------####
-
-#input a vector that contains a column
-#input2 genomas de interes
-#output verdadero o falso si los genomas se encuentran en la columna por arriba
-#de la moda
-filter_EF_above_mode <- function(f,g_names){#f is a vector and df is a dataframe
-  EFmode <- .data$getmoda(f)
+filter_EF_above_mode <- function(f,
+                                 g_names){
+  EFmode <- getmoda(f)
   abovemodeindexes <- which(f > EFmode)
-  binsabovemode<-g_names[which(g_names%in%abovemodeindexes)]
-  trueorfalse<-any(binsabovemode)
+  binsabovemode <- g_names[which(g_names%in%abovemodeindexes)]
+  trueorfalse <- any(binsabovemode)
   return(trueorfalse)
 
 }

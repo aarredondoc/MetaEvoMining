@@ -26,7 +26,6 @@ make_directories_by_taxa<-function(inputdir,
   parent_directory<-dir.create(paste0("data/",fam_name))
   # make the name of output directory---------------------------------------####
   get_dir_name <- function() {
-  #today <- format(Sys.Date(), "%Y-%m-%d")
   return(paste0("data/",fam_name,"/",fam_name,"_bins"))
   }
 

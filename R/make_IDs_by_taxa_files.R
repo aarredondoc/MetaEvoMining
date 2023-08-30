@@ -11,15 +11,16 @@
 #' @import readr
 #' @examples make_IDs_by_taxa_files(list_of_families,taxonomy_table)
 #' @noRd
+
 make_IDs_by_taxa_files<-function(list_of_families,
                                  gtdbK_report){
 
 
-output<-lapply(list_of_families,function(x)make_IDs_by_taxa_table(x,
+  output<-lapply(list_of_families,function(x)make_IDs_by_taxa_table(x,
                                                       gtdbK_report))
-if (!is.null(output)) {
-  print(message("ID files created"))
-  }
+  if (!is.null(output)) {
+    print(message("ID files created"))
+    }
 }
 
 
