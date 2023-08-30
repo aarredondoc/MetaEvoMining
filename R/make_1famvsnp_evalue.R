@@ -7,6 +7,7 @@
 #' @param blast_genomesvsfam dataframe of blast file genomes versus central
 #' families.
 #' @details This function is used in make_evalue_df_for_plot funtion.
+#' @import dplyr
 #' @return A dataframe with 4 columns: Families, MeanNP, MedianNP, ClosestNP.
 #' @noRd
 #' @examples
