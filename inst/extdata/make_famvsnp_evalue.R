@@ -1,4 +1,4 @@
-#' @Title Make a dataframe with blast e-values genomesVs.NP
+#' @title Make a dataframe with blast e-values genomesVsNP
 #' @description Load the genomes vs. NP blast file and search for the five
 #' better results, and the best e-value and make a mean and median of the five.
 #' then makes a dataframe with the results.

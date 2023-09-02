@@ -1,16 +1,17 @@
-#' Title
+#' Make a dataframe with evalues in -log10 by family
 #'
-#' @param Enzymefamily
-#' @param matriz_resultante
+#' @param Enzymefamily number of the family
+#' @param matriz_resultante short dataframe wit names of family, genomes and
+#' evalue
 #'
-#' @return
-#' @export
+#' @return a datrame with e-values in -log10
+#' @noRd
 #'
-#' @examples
-make_evalue_df_forplot <- function(Enzymefamily,matriz_resultante,mm_NP_df) {
-#Enzymefamily<-"3PGA_AMINOACIDS|1|Phosphoglycerate_dehydrogenase_1|Cglu"
+
+make_evalue_df_forplot_byfamily <- function(Enzymefamily,matriz_resultante,mm_NP_df) {
+  #Enzymefamily<-"3PGA_AMINOACIDS|1|Phosphoglycerate_dehydrogenase_1|Cglu"
   # subset dataframe by family and order it
-  subconjunto <- matriz_resultante[matriz_resultante$V1 == Enzymefamily, ]
+  subconjunto <- matriz_resultante[matriz_resultante$numeros == Enzymefamily, ]
   subconjunto <- subconjunto[order(subconjunto$V11),]
 
   # calculate the differences between e-values
@@ -23,7 +24,7 @@ make_evalue_df_forplot <- function(Enzymefamily,matriz_resultante,mm_NP_df) {
 
   # make a dataframe with the results
   resultsdataframe <- data.frame(
-    Familia = unique(subconjunto$V1),
+    Familia = unique(subconjunto$numero),
     media = -log10(mean_dif+1e-200),
     mediana =-log10(median_dif+1e-200)
     #medianaNP = -log10(abs(median_dif - mm_NP_df$medianaNP)+ 1e-200)
@@ -48,8 +49,12 @@ make_evalue_df_forplot <- function(Enzymefamily,matriz_resultante,mm_NP_df) {
   mm_NP_df$closestNP <- -log10(abs(median_dif - mm_NP_df$closestNP)+ 1e-200)
   #print(mm_NP_df)
 
+  # Reemplazar la columna 'nombres' con los números
+  mm_NP_df <- mm_NP_df %>%
+    mutate(numeros = extraer_numero(Familia))
+
   # add cols by index
-  match_indices <- match(resultsdataframe$Familia,mm_NP_df$Familia)
+  match_indices <- match(resultsdataframe$Familia,mm_NP_df$numeros)
   #print(match_indices)
   # Agregar la columna Valor2 de df2 a df1 basado en las correspondencias
   resultsdataframe$mediaNP <- mm_NP_df$mediaNP[match_indices]
@@ -62,4 +67,4 @@ make_evalue_df_forplot <- function(Enzymefamily,matriz_resultante,mm_NP_df) {
 
   return(resultsdataframe)
 }
-  #medianaNP = median_dif - mm_NP_df$medianaNP
+#medianaNP = median_dif - mm_NP_df$medianaNP

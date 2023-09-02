@@ -9,14 +9,15 @@
 #'
 #' @return a plot with median, and mean of diference in evalues in -log10 +
 #' a constant between famvsNPs and genomesvsfams
-#' @export
+#' @noRd
 #'
 #' @examples
 #' plotmm1<- plot_evalue_differences("pscplos17.blast.uniq",".")
 
-plot_evalue_differences<-function(blastfile, directory){
+plot_evalue_differences_byfam<-function(blastfile, directory){
 
   # load blast file---------------------------------------------------------####
+  #blastfile<-"pscplos17.blast.uniq"
   blast_genomesvsfam<-read.table(blastfile)
 
   # shorten the dataframe
@@ -25,10 +26,16 @@ plot_evalue_differences<-function(blastfile, directory){
   matriz_resultante <- matriz_resultante[order(matriz_resultante$V11),]
 
   # make a list of all families in the file
-  Familieslist<-unique(matriz_resultante$V1)
+  Familieslist<- unique(unlist(regmatches(matriz_resultante$V1,
+                                          gregexpr("\\|(\\d+)\\|",
+                                                   matriz_resultante$V1))))
+
+  # Reemplazar la columna 'nombres' con los números
+  matriz_resultante <- matriz_resultante %>%
+    mutate(numeros = extraer_numero(V1))
 
   ## calculate evalues to NP------------------------------------------------####
-  archivosGenomesvsNP <- as.list(list.files(directory,
+  archivosGenomesvsNP <- as.list(list.files(".",
                                             pattern = "*ExpandedVsNp.blast.2"))
   genomeNPvalues<-lapply(archivosGenomesvsNP,
                          make_fam_np_evalue,
@@ -38,7 +45,7 @@ plot_evalue_differences<-function(blastfile, directory){
 
   # calculate mean and median of the diferences between e-values------------####
   meanmedian_data<-lapply(Familieslist,
-                          make_evalue_df_forplot,
+                          make_evalue_df_forplot_byfamily,
                           matriz_resultante,
                           mm_NP_df )
 
@@ -52,9 +59,9 @@ plot_evalue_differences<-function(blastfile, directory){
                          -Familia)
 
   # make a plot to compare means and medians
-  mmplot <- ggplot(data_long_mm, aes(x = Familia, y = valor, fill = columna)) +
+  mmplotfam <- ggplot(data_long_mm, aes(x = Familia, y = valor, fill = columna)) +
     geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
-    labs(title = "Comparación de e-valores en -log10",
+    labs(title = "Comparación de diferencias de e-valores en -log10 por familia",
          x = "Nombres",
          y = "Valor",
          fill = "Columna") +
@@ -62,5 +69,5 @@ plot_evalue_differences<-function(blastfile, directory){
     theme_minimal() +  # Rotar etiquetas en eje x
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-  return(mmplot)
+  return(mmplotfam)
 }

@@ -16,4 +16,6 @@ Imports:
   stringi,
   purrr,
   stringr,
-  tidyr
+  tidyr,
+  ggplot2,
+  scales

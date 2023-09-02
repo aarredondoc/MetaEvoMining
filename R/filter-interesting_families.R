@@ -22,12 +22,6 @@ filter_interest_families<-function(EvoMinining_heatplot){
   Totalgenomes <- evominining_table$Genomes #all genome names list
   Mydata_bins <- grep("*mSIPHEX*",Totalgenomes) # My genomes of interest
 
-  # encontrar la moda de una columna----------------------------------------####
-  getmoda <- function(v) {
-    uniqv <- unique(v)
-    uniqv[which.max(tabulate(match(v, uniqv)))]
-  }
-
   # select all numeric columns----------------------------------------------####
   numerical_columns <- sapply(evominining_table, is.numeric)
   numco <- evominining_table[numerical_columns]
