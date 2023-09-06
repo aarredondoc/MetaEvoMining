@@ -46,7 +46,13 @@ plot_evalue_differences_byfam<-function(blastfile, directory){
   genomeNPvalues<-lapply(archivosGenomesvsNP,
                          make_fam_np_evalue,
                          blast_genomesvsfam)
-  mm_NP_df <- do.call(rbind, genomeNPvalues)
+
+  # Usa bind_rows para combinar los data frames
+  mm_NP_df <- bind_rows(genomeNPvalues)
+  #print(mm_NP_df)
+  # combined_data ahora contiene todos los datos de los data frames en meanmedian_data
+
+  #mm_NP_df <- do.call(rbind, genomeNPvalues)
   #print(mm_NP_df)
 
   # calculate mean and median of the diferences between e-values------------####
@@ -55,7 +61,7 @@ plot_evalue_differences_byfam<-function(blastfile, directory){
                           matriz_resultante,
                           mm_NP_df )
 
-  result_mm_df <- do.call(rbind, meanmedian_data)
+  result_mm_df <- bind_rows(meanmedian_data)
   #print(result_mm_df)
   #data_filtrado <- result_mm_df %>%
   #  filter(abs(CENTRALmedian - closest5NPmedian) <= 0) %>% filter(CENTRALmedian >= 0)
@@ -66,6 +72,7 @@ plot_evalue_differences_byfam<-function(blastfile, directory){
                          key = "columna",
                          value = "valor",
                          -Familia)
+  df_filtrado <- data_long_mm[complete.cases(data_long_mm), ]
 
   # make a plot to compare means and medians
   #mmplotfam <- ggplot(data_long_mm, aes(x = Familia, y = valor, fill = columna)) +
@@ -80,11 +87,13 @@ plot_evalue_differences_byfam<-function(blastfile, directory){
 
 
   # Definir los colores manualmente
-  mis_colores <- c("#FFC0CB","#DC143C","#4169E1","#1E90FF","#6495ED")
+  mis_colores <- c("#0e95d0","#0e95d0","#0e95d0","#0e95d0","#0e95d0","#0e95d0","#0e95d0","#FFC0CB","#DC143C","#4169E1","#1E90FF","#6495ED")
 
+  #paleta_azul <- c("#03396c", "#005b96", "#0a7bc2", "#0e95d0", "#13afd7", "#18c2e0", "#1ce2f0")
 
+  #paleta_azul_claro <- c("#C6DBEF", "#9EC8E9", "#7BAFD4", "#5B94C1", "#4377B0", "#2B5FA3", "#144592")
 
-  mmplotfam<-ggplot(data_long_mm, aes(x = Familia, y = valor, fill = columna)) +
+  mmplotfam<-ggplot(df_filtrado, aes(x = Familia, y = valor, fill = columna)) +
     geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
     labs(title = "Comparison of differences in e-values by family",
          x = "Enzyme Families",

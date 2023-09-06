@@ -8,7 +8,7 @@
 #' families.
 #' @details This function is used in make_evalue_df_for_plot funtion.
 #' @import dplyr
-#' @return A dataframe with 4 columns: Families, MeanNP, MedianNP, ClosestNP.
+#' @return A dataframe with 4 columns: Families, MeanNP, MedianNP, NPclosest.
 #' @noRd
 #' @examples
 #' genomeNPvalues<-lapply(archivosGenomesvsNP,
@@ -49,19 +49,51 @@ make_fam_np_evalue <- function(blast_genomesvsNP,
 
 
     } else {
-      # Order and slice to 5 and best e values----------------------------------####
-      blast_genomesvsnp <- blast_genomesvsnp[order(blast_genomesvsnp$V11),]
 
       blast_genomesvsnp <- blast_genomesvsnp %>%
         mutate(numeros = extraer_numero(Familia))
+      # Ordenar el dataframe blast_genomesvsnp por la columna V11
+      blast_genomesvsnp <- blast_genomesvsnp[order(blast_genomesvsnp$V11),]
 
-      lista_de_dataframes <- split(blast_genomesvsnp,blast_genomesvsnp$V2)
-      #print(lista_de_dataframes)
+      # Dividir el dataframe en una lista de dataframes según la columna V2
+      lista_de_dataframes <- split(blast_genomesvsnp, blast_genomesvsnp$V2)
+
+      # Calcular las medianas para cada dataframe en la lista
       medianas <- sapply(lista_de_dataframes, function(df) median(df$V11))
-      #medias<-order[medias]
+
+      # Ordenar las medianas
       medianas_ordenadas <- sort(medianas)
-      # Imprime los nombres de los dataframes
+
+      # Obtener los nombres de los dataframes con las 5 medianas más altas
       nombres_dataframes_top5 <- names(medianas)[match(head(medianas_ordenadas, 5), medianas)]
+
+      # Crear un nuevo dataframe vacío con los nombres de las medianas como columnas
+      nuevo_dataframe <- data.frame(Nombres = unique(blast_genomesvsnp$numeros))
+
+      # Agregar las medianas como columnas al nuevo dataframe
+      for (nombre in nombres_dataframes_top5) {
+        nueva_columna <- medianas[nombre]
+        nuevo_dataframe[nombre] <- nueva_columna
+      }
+
+      # Imprimir el nuevo_dataframe
+      #print(nuevo_dataframe)
+
+      # Order and slice to 5 and best e values----------------------------------####
+      #blast_genomesvsnp <- blast_genomesvsnp[order(blast_genomesvsnp$V11),]
+
+      #blast_genomesvsnp <- blast_genomesvsnp %>%
+      #  mutate(numeros = extraer_numero(Familia))
+
+      #lista_de_dataframes <- split(blast_genomesvsnp,blast_genomesvsnp$V2)
+      #print(lista_de_dataframes)
+
+      #medianas <- sapply(lista_de_dataframes, function(df) median(df$V11))
+      #medias<-order[medias]
+      #print(medianas)
+      #medianas_ordenadas <- sort(medianas)
+      # Imprime los nombres de los dataframes
+      #nombres_dataframes_top5 <- names(medianas)[match(head(medianas_ordenadas, 5), medianas)]
       #print(nombres_dataframes_top5)
       #medianastop5<-medianas[nombres_dataframes_top5]
       #print(medianastop5)
@@ -73,21 +105,21 @@ make_fam_np_evalue <- function(blast_genomesvsNP,
       # y un vector de medianas llamado medianas
 
       # Crear un nuevo dataframe
-      nuevo_dataframe <- data.frame(Familia = unique(blast_genomesvsnp$numeros))
+      #nuevo_dataframe <- data.frame(Nombres = unique(blast_genomesvsnp$Familia))
 
       # Agregar las medianas como columnas al nuevo dataframe
-      for (i in 1:length(nombres_dataframes_top5)) {
-        nombre <- nombres_dataframes_top5[i]
-        indice <- match(nombre, names(medianas))
-        nueva_columna <- medianas[indice]
-        nombre_columna <- nombres_dataframes_top5
-        nuevo_dataframe[nombre_columna] <- nueva_columna
-      }
+      #for (i in 1:length(nombres_dataframes_top5)) {
+        #nombre <- nombres_dataframes_top5[i]
+        #indice <- match(nombre, names(medianas))
+        #nueva_columna <- medianas[indice]
+        #nombre_columna <- nombres_dataframes_top5
+       # nuevo_dataframe[nombre_columna] <- nueva_columna
+      #}
 
       # Ahora, nuevo_dataframe contendrá una columna "Nombre" con los nombres de los dataframes
       # y una columna separada para cada mediana
 
-      print(nuevo_dataframe)
+      #print(nuevo_dataframe)
       # El nuevo_dataframe tendrá una columna por cada mediana
       # con los nombres de los dataframes como encabezados de columna
 
@@ -112,34 +144,34 @@ make_fam_np_evalue <- function(blast_genomesvsNP,
 
 
       #crop to the top5
-      first5_np<-slice_head(n = 5, blast_genomesvsnp)
+      #first5_np<-slice_head(n = 5, blast_genomesvsnp)
 
       #lista_de_dataframes <- split(first5_np,first5_np$V2)
       #print(lista_de_dataframes)
 
-      first5_np<- first5_np[,c(2,11,13)]
-      closestNP<-first5_np[1,]
+      #first5_np<- first5_np[,c(2,11,13,14)]
+      closestNP<-blast_genomesvsnp[1,]
       #print(unique(blast_genomesvsnp$V2))
 
 
       # Calculate mean and median of top 5
-      mean_NP<-mean(first5_np$V11)
+      mean_NP<-mean(blast_genomesvsnp$V11)
       #print(mean_NP)
       #mean_NP<-
-      median_NP<-median(first5_np$V11)
+      median_NP<-median(blast_genomesvsnp$V11)
 
       # make a result datframe--------------------------------------------------####
       NP_evalue_dataframe <- data.frame(
         Familia = unique(blast_genomesvsnp$numeros),
-        closestmean5NP = mean_NP + 1e-200,
-        closest5NPmedian = median_NP + 1e-200,
-        closestNP = closestNP[,"V11"] + 1e-200
+        NPmean = mean_NP,
+        NP_median = median_NP,
+        NPclosest = closestNP[,"V11"]
       )
 
-      print(NP_evalue_dataframe)
+      #print(NP_evalue_dataframe)
       # Suponiendo que A y B son tus dataframes
-      combined_df <- merge(NP_evalue_dataframe, nuevo_dataframe, by = "Familia", all.x = TRUE)
-      print(combined_df)
+      combined_df <- merge(NP_evalue_dataframe, nuevo_dataframe, by.x = "Familia",by.y="Nombres", all.x = TRUE)
+      #print(combined_df)
     }
   }
 
