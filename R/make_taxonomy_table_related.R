@@ -17,4 +17,5 @@ make_taxonomy_table_related<-function(gtdbK_report){
 
 library(dplyr)
 library(purrr)
+library(readr)
 taxtablerelated<-make_taxonomy_table_related("inst/extdata/gtdbtk.bac120.summary.tsv")
