@@ -18,7 +18,7 @@
 #' @noRd
 
 
-search_shell_enzymes_DB<-function(csv_matrix,path){
+search_shell_enzymes_DB<-function(csv_matrix,path,outputname){
 
   # load the pangenome matrix and select count columns----------------------####
 
@@ -63,59 +63,64 @@ search_shell_enzymes_DB<-function(csv_matrix,path){
                                         stri_split(fragments[1],
                                                    fixed = ":",
                                                    simplify = TRUE)[2]
-                                        )
-               ),
+        )
+        ),
         sep="|")
       format<-c(header,sequence)
       return(format)
     }
   }
 
-
   fasta_lines <- lapply(shell_genes, function(file) {
-    enzyme <- filter_files(file,shell_genes,path)
-    cat(paste(enzyme[1],
-              "\n",
-              gsub(" ","",gsub("(.{80})", "\\1\n", enzyme[2], perl=TRUE)),
-              collapse = "",sep = ""),"\n",
-        file = .data$new_fasta_file, append = TRUE,sep = "")
+    enzyme <- filter_files(file, shell_genes, path)
+    paste(enzyme[1], enzyme[2], sep = "\n")
   })
 
+  #fasta_lines <- do.call(rbind, fasta_lines)
+  #print(fasta_lines)
 
   # filter out the blank lines----------------------------------------------####
-  non_blank_lines <- fasta_lines[!grepl("^\\s*$", fasta_lines)]
+  fasta_lines <- fasta_lines[!grepl("^\\s*$", fasta_lines)]
+  print(class(fasta_lines))
 
-  fasta_lines <- non_blank_lines
+  #fasta_lines <- non_blank_lines
 
   # initialize a counter for the sequence headers---------------------------####
   header_counter <- 1
+  fasta_lines_mod <- list()
 
-  # loop over the lines and modify the sequence headers---------------------####
-  for (i in 1:length(fasta_lines)) {
-    if (startsWith(fasta_lines[i], ">")) {
-      # extract the unique identifier from the header-----------------------####
-      header_id <- gsub(">[^ ]+ ", "", fasta_lines[i], perl=TRUE)
 
-      # construct the new header with the appended number-------------------####
-      split<-stri_split(header_id, fixed = "|",simplify = TRUE)
-      new_header <- paste(split[1],header_counter,split[3],split[4],sep="|")
+  for (line in fasta_lines) {
+    if (startsWith(line, ">")) {
+      # extract the unique identifier from the header
+      header_id <- gsub(">[^ ]+ ", "", line, perl=TRUE)
 
-      # replace the old header with the new one-----------------------------####
-      fasta_lines[i] <- new_header
+      # construct the new header with the appended number
+      split <- stri_split(header_id, fixed = "|", simplify = TRUE)
+      new_header <- str_c(split[1], header_counter, str_c(header_counter,split[3],sep = "_"), split[4], sep = "|")
 
-      # increment the header counter----------------------------------------####
+      # replace the old header with the new one
+      line <- new_header
+
+      # increment the header counter
       header_counter <- header_counter + 1
+
+      # imprimir la línea modificada
     }
-  }
-  if (fasta_lines[length(fasta_lines)] == "") {
-    fasta_lines <- fasta_lines[-length(fasta_lines)]
+    # Agregar la línea modificada a la nueva lista
+    fasta_lines_mod <- c(fasta_lines_mod, line)
+
   }
 
+  fasta_lines_mod <- unlist(fasta_lines_mod)
+  #print(fasta_lines_mod)
   # remove any trailing whitespace from the last line-----------------------####
-  fasta_lines[length(fasta_lines)] <- gsub("\\s+$", "",
-                                           fasta_lines[length(fasta_lines)])
+  fasta_lines_mod[length(fasta_lines_mod)] <- gsub("\\s+$", "",
+                                                   fasta_lines_mod[length(fasta_lines_mod)])
+  print(fasta_lines_mod)
 
+  #print(fasta_lines)
   # write the modified character vector back to a new FASTA file------------####
-  writeLines(fasta_lines, "Shell_DB.fasta")
+  writeLines(fasta_lines_mod, paste0("../",outputname))
 }
 

@@ -28,7 +28,7 @@ make_taxonomy_id <- function(table,
   lineage<-specie
   if(specie == "s__"){
     lineage<-lapply(assembly_classification,`[[`, 6)
-    if(f=="g__"){
+    if(specie=="g__"){
       lineage<-lapply(assembly_classification,`[[`, 5)
     }
   }

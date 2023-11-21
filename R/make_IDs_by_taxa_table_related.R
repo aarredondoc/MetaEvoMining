@@ -18,9 +18,9 @@ make_IDs_by_taxa_table_related <- function(fam,
       #        row.names = FALSE, col.names = FALSE, quote=FALSE)
 }
 
-taxatableby_lineage<-make_IDs_by_taxa_table_related("f__Alcanivoracaceae",taxtablerelated)
+#taxatableby_lineage<-make_IDs_by_taxa_table_related("f__Alcanivoracaceae",taxtablerelated)
 
-mi_lista_de_genomas <- paste(taxatableby_lineage$related_genomes,collapse = ",")
+#mi_lista_de_genomas <- paste(taxatableby_lineage$related_genomes,collapse = ",")
 
-writeLines(mi_lista_de_genomas, con = "family_related_genomes.txt")
+#writeLines(mi_lista_de_genomas, con = "family_related_genomes.txt")
 
