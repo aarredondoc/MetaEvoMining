@@ -21,7 +21,7 @@ filter_interest_families<-function(EvoMinining_heatplot){
   evominining_table <- read_tsv(EvoMinining_heatplot)#dataframe
   Totalgenomes <- evominining_table$Genomes #all genome names list
   Mydata_bins <- grep("*mSIPHEX*",Totalgenomes) # My genomes of interest
-
+  print(Mydata_bins)
   # select all numeric columns----------------------------------------------####
   numerical_columns <- sapply(evominining_table, is.numeric)
   numco <- evominining_table[numerical_columns]
@@ -33,25 +33,26 @@ filter_interest_families<-function(EvoMinining_heatplot){
 
   keepindex <- sapply(numco,filter_EF_above_mode,Mydata_bins)#arroja una lista de nombres con TRUE si esta en los genomas de interes y FALSE si no está
   keepcolumns <- numco[keepindex] #familias a las que si hacer el arbol de evomining
+  print(keepcolumns)
   nameskeepcol <- colnames(keepcolumns)
-  return(nameskeepcol)
+  #return(nameskeepcol)
 
   # output name--------------------------------------------------------------####
   file_name_var <- EvoMinining_heatplot
   fam_nm <- strsplit(file_name_var,"_")
   fam_name <- fam_nm[[1]][1]
-
+  print(fam_name)
   # create a file with the EF that we want to keep--------------------------####
-  #write.table(nameskeepcol,
-  #           file= paste(fam_name,"_runtreeevo_AAD_DB.txt",
-  #                        sep = ""),
-  #           sep = "\t",
-  #            row.names = FALSE,
-  #           col.names = FALSE,
-  #            quote = FALSE
-  #            )
+  table<-write.table(nameskeepcol,
+            file= paste("../../../Desktop/olei_runtreeevo_AAD_DB.txt",
+                        sep = ""),
+            sep = "\t",
+            row.names = FALSE,
+            col.names = FALSE,
+            quote = FALSE
+             )
 
-
+  return(table)
 }
 
 
