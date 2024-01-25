@@ -30,7 +30,7 @@ search_shell_enzymes_DB<-function(csv_matrix,path,outputname){
   # select the genes which has copies in more than half --------------------####
   makerow_ofcondition <- function (row) {
     V <- as.logical(row)
-    keepvalue <- sum(V)>length(V)/2
+    keepvalue <- sum(V)>length(V)/2 # condition for >50%
     return(keepvalue)
   }
 
