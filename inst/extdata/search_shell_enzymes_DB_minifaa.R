@@ -23,14 +23,14 @@ search_shell_enzymes_DB<-function(csv_matrix,path,outputname){
   # load the pangenome matrix and select count columns----------------------####
 
   Pangenome_matrix <- read_csv(paste0(path,csv_matrix))
-  cols_to_keep <- grep("*.gbk", names(Pangenome_matrix), value= TRUE)
+  cols_to_keep <- grep("*.faa", names(Pangenome_matrix), value= TRUE)
   matrix_subset <- Pangenome_matrix[cols_to_keep]
   row1 <- matrix_subset[1,]
 
   # select the genes which has copies in more than half --------------------####
   makerow_ofcondition <- function (row) {
     V <- as.logical(row)
-    keepvalue <- sum(V)>length(V)/2 #condition for shell(>%50)
+    keepvalue <- sum(V)>length(V)/2 # condition for >50%
     return(keepvalue)
   }
 
@@ -51,17 +51,18 @@ search_shell_enzymes_DB<-function(csv_matrix,path,outputname){
     if (file %in% lista) {
       x <- readLines(file_path)
       sequence <- x[2]
+      print(sequence)
       first_seq <- c(x[1],x[2])
       header <- first_seq[[1]][1]
-      fragments <- stri_split(as.character(header), fixed = "|",simplify = TRUE)
-      print(fragments)
-      specie <- gsub("\\[|\\]","",fragments[2])
-      print(specie)
+      print(header)
+      fragments <- stri_split(as.character(header), fixed = " ",simplify = TRUE)
+      print(paste("fragments",fragments))
+      #specie <- gsub("\\[|\\]","",fragments[2])
+      #print(specie)
       header <- paste(
-        stri_split(fragments[1],fixed = ":",simplify = TRUE)[1],
-        "1", gsub(" ","_",fragments[5]),
-        paste0(gsub(" ","",specie), fragments[3]
-        ),
+        stri_split(fragments[1],fixed = "_",simplify = TRUE)[1],
+        "1", gsub(" ","_",paste0(fragments[2],fragments[3])),
+        "minigenomes",
         sep="|")
       print(header)
       #header_mod<-stri_split(header,fixed = "_",
@@ -77,12 +78,12 @@ search_shell_enzymes_DB<-function(csv_matrix,path,outputname){
     paste(enzyme[1], enzyme[2], sep = "\n")
   })
 
-  #fasta_lines <- do.call(rbind, fasta_lines)
-  #print(fasta_lines)
+  fasta_lines <- gsub("\\([^\\)]+\\)", "", fasta_lines)
+  print(fasta_lines)
 
   # filter out the blank lines----------------------------------------------####
   fasta_lines <- fasta_lines[!grepl("^\\s*$", fasta_lines)]
-  #print(class(fasta_lines))
+  print(fasta_lines)
 
   #fasta_lines <- non_blank_lines
 
@@ -118,7 +119,7 @@ search_shell_enzymes_DB<-function(csv_matrix,path,outputname){
   }
 
   fasta_lines_mod <- unlist(fasta_lines_mod)
-  #print(fasta_lines_mod)
+  print(fasta_lines_mod)
   # remove any trailing whitespace from the last line-----------------------####
   fasta_lines_mod[length(fasta_lines_mod)] <- gsub("\\s+$", "",
                                                    fasta_lines_mod[length(fasta_lines_mod)])
