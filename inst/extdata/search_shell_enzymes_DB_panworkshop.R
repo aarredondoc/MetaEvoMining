@@ -13,7 +13,7 @@
 #' @import readr dplyr stringi
 #' @examples
 #' \dontrun{
-#' search_shell_enzymes_DB("pangenome_matrix_t0.tr.csv",path2)
+#' search_shell_enzymes_DB("pangenome_matrix_t0.tr.csv",path2,output_path)
 #' }
 #' @noRd
 
@@ -24,15 +24,18 @@ search_shell_enzymes_DB<-function(csv_matrix,path,outputname){
 
   Pangenome_matrix <- read_csv(paste0(path,csv_matrix))
   cols_to_keep <- grep("*.gbk", names(Pangenome_matrix), value= TRUE)
+  print(cols_to_keep)
   matrix_subset <- Pangenome_matrix[cols_to_keep]
   row1 <- matrix_subset[1,]
+  print(matrix_subset)
 
   # select the genes which has copies in more than half --------------------####
   makerow_ofcondition <- function (row) {
     V <- as.logical(row)
-    keepvalue <- sum(V)>length(V)/2 #condition for shell(>%50)
+    keepvalue <- sum(V)>length(V)/2 # si quitas/2 de dará todas las que se comparten entre ambos genomas sutituir > por =
     return(keepvalue)
   }
+
 
   # apply the function to all rows and obtain a matrix subset---------------####
 
@@ -41,13 +44,14 @@ search_shell_enzymes_DB<-function(csv_matrix,path,outputname){
   matrix_subset$more_than_half <- allrow_values
   matrix_subset <- filter(matrix_subset,.data$more_than_half == TRUE)
   shell_genes <- matrix_subset$gene
-
+  print(shell_genes)
 
   # this function has a input file a list of file names and returns the first
   # line of each file-------------------------------------------------------####
 
   filter_files <- function(file,lista,path) {
-    file_path <- file.path(paste0(getwd(),"/",path,file,collapse = '|'))
+    file_path <- file.path(paste0(path,file,collapse = '|'))
+    print(file_path)
     if (file %in% lista) {
       x <- readLines(file_path)
       sequence <- x[2]
@@ -126,5 +130,5 @@ search_shell_enzymes_DB<-function(csv_matrix,path,outputname){
 
   #print(fasta_lines)
   # write the modified character vector back to a new FASTA file------------####
-  writeLines(fasta_lines_mod, paste0("../",outputname))
+  writeLines(fasta_lines_mod,outputname)
 }
