@@ -1,6 +1,12 @@
 
 # MetaEvoMining
 
+### *Acknowledgments*
+I would like to thank the PAPIIT IA106323 project Pan-cluster, Big Data tools for the pangenomic characterization of biosynthetic clusters in microorganisms for providing the funding to carry out this project. I also appreciate the Bioinformatics Laboratory at CCM-UNAM for providing us with the necessary resources and Dr. Mirna Vázquez for providing us with the data to work with.
+### *Agradecimientos*
+Quiero agradecer al proyecto PAPIIT IA106323 Pan-cluster, herramientas de Big Data para caracterización pangenómica de clústeres biosintéticos en microorganismos por brindarnos el financiamiento para llevar a cabo este proyecto. También agradezco al Laboratorio de Bioinformática del CCM por proporcionarnos los recursos necesarios y a la Dra. Mirna Vázquez por facilitarnos los datos para trabajar.
+
+
 ## What is MetaEvoMining?
 
 MetaEvoMining is a tool for the exploration of unknown enzymes using an
